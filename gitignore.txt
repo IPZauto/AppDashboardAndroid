@@ -81,5 +81,4 @@ CMakeLists.txt.user*
 *.qmlc
 *.jsc
 *build-*
-*build/
 
