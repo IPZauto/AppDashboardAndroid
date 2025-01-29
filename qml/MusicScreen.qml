@@ -88,7 +88,7 @@ Rectangle {
         anchors.horizontalCenter: parent.horizontalCenter
 
         Slider {
-            id: slider_music
+            id: musicSlider
             height: musicContainer.height
             width: musicContainer.width * 0.9
             value: musicPlayer.position / musicPlayer.duration
@@ -103,15 +103,15 @@ Rectangle {
 
             onMoved: {
 
-                musicPlayer.setPosition(slider_music.value * musicPlayer.duration)
+                musicPlayer.setPosition(musicSlider.value * musicPlayer.duration)
 
             }
 
             background: Rectangle {
-                id: backgroundRec_music
-                y: slider_music.topPadding + slider_music.availableHeight / 2 - height / 2
-                width: slider_music.width
-                height: slider_music.height
+                id: musicBackgroundRec
+                y: musicSlider.topPadding + musicSlider.availableHeight / 2 - height / 2
+                width: musicSlider.width
+                height: musicSlider.height
                 radius: 1
                 color: "#ffffff"
                 opacity: 0.2
@@ -122,8 +122,8 @@ Rectangle {
             }
 
             handle: Rectangle {
-                x: slider_music.visualPosition * (slider_music.width - width)
-                y: slider_music.topPadding + slider_music.availableHeight / 2 - height / 2
+                x: musicSlider.visualPosition * (musicSlider.width - width)
+                y: musicSlider.topPadding + musicSlider.availableHeight / 2 - height / 2
                 width: 20
                 height: 20
 
@@ -133,11 +133,11 @@ Rectangle {
             }
 
             Rectangle {
-                id: fill_music
-                width: slider_music.visualPosition * backgroundRec_music.width
-                x: backgroundRec_music.x + backgroundRec_music.width*0
-                y: backgroundRec_music.y + backgroundRec_music.height*0.2
-                height: backgroundRec_music.height * 0.6
+                id: musicFill
+                width: musicSlider.visualPosition * musicBackgroundRec.width
+                x: musicBackgroundRec.x + musicBackgroundRec.width*0
+                y: musicBackgroundRec.y + musicBackgroundRec.height*0.2
+                height: musicBackgroundRec.height * 0.6
                 color: "#ffffff"
                 radius: 10
             }
@@ -175,14 +175,14 @@ Rectangle {
             anchors.centerIn: parent
 
             Image {
-                id: left_arrow
+                id: leftArrow
                 source: Qt.resolvedUrl("qrc:/resources/images/arrow_back_icon.png")
                 width: 80
                 height: 80
                 fillMode: Image.PreserveAspectFit
 
                 MouseArea {
-                    id: left_arrow_area
+                    id: leftArrowArea
                     anchors.fill: parent
                     onClicked:{
                         root.songStoppedManually = true;
@@ -202,14 +202,14 @@ Rectangle {
             }
 
             Image {
-                id: right_arrow
+                id: rightArrow
                 source: Qt.resolvedUrl("qrc:/resources/images/arrow_forward_icon.png")
                 width: 80
                 height: 80
                 fillMode: Image.PreserveAspectFit
 
                 MouseArea {
-                    id: right_arrow_area
+                    id: rightArrowArea
                     anchors.fill: parent
                     onClicked: {
 
@@ -228,15 +228,15 @@ Rectangle {
     function manageSound(){
         checkMuted();
         if(root.muted){
-            sound_icon.source = "qrc:/resources/images/sound_icon_internet33.png";
+            soundIcon.source = "qrc:/resources/images/sound_icon_internet33.png";
         }else{
-            sound_icon.source = "qrc:/resources/images/sound_icon_internet31.png";
+            soundIcon.source = "qrc:/resources/images/sound_icon_internet31.png";
         }
         musicPlayer.audioOutput.muted = root.muted;
     }
 
     Item {
-        id: _item
+        id: volumeContainer
         width: 80
         height: 1*root.width/3 + 80
         anchors.verticalCenter: parent.verticalCenter
@@ -245,7 +245,7 @@ Rectangle {
         anchors.verticalCenterOffset: -20
 
         Slider {
-            id: slider
+            id: volumeSlider
             height: root.width*0.29
             width: root.height*0.1
             value: 0.5
@@ -260,16 +260,16 @@ Rectangle {
             //snapMode: Slider.SnapOnRelease
 
             onMoved: {
-                root.volume = slider.value;
+                root.volume = volumeSlider.value;
                 audioOutput.volume = root.volume;
             }
 
             background: Rectangle {
-                id: backgroundRec
+                id: volumeBackgroundRec
                 //x: slider.leftPadding
-                y: slider.topPadding + slider.availableHeight / 2 - height / 2
-                width: slider.width*0.15
-                height: slider.height
+                y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
+                width: volumeSlider.width*0.15
+                height: volumeSlider.height
                 radius: 1
                 color: "#ffffff"
                 opacity: 0.2
@@ -280,8 +280,8 @@ Rectangle {
             }
 
             handle: Rectangle {
-                x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
-                y: slider.topPadding + slider.availableHeight / 2 - height / 2
+                x: volumeSlider.leftPadding + volumeSlider.visualPosition * (volumeSlider.availableWidth - width)
+                y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
                 implicitWidth: 8
                 implicitHeight: 8
                 color: "transparent"
@@ -289,22 +289,22 @@ Rectangle {
 
             Rectangle {
                 id: fill
-                height: (1 - slider.visualPosition) * backgroundRec.height
+                height: (1 - volumeSlider.visualPosition) * volumeBackgroundRec.height
                 //height: backgroundRec.height
-                x: backgroundRec.x + backgroundRec.width*0.1
-                y: backgroundRec.y + backgroundRec.height
-                width: backgroundRec.width * 0.8
+                x: volumeBackgroundRec.x + volumeBackgroundRec.width*0.1
+                y: volumeBackgroundRec.y + volumeBackgroundRec.height
+                width: volumeBackgroundRec.width * 0.8
                 color: "#ffffff"
                 radius: 10
-                transform: Scale { origin.x: backgroundRec.x; origin.y: backgroundRec.y; yScale: -1}
+                transform: Scale { origin.x: volumeBackgroundRec.x; origin.y: volumeBackgroundRec.y; yScale: -1}
             }
         }
 
         Image {
-            id: sound_icon
+            id: soundIcon
             width: 50
             anchors.top: parent.top
-            anchors.bottom: slider.top
+            anchors.bottom: volumeSlider.top
             anchors.topMargin: 0
             source: "qrc:/resources/images/sound_icon_internet31.png"
             anchors.horizontalCenter: parent.horizontalCenter
