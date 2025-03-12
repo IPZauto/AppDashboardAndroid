@@ -228,9 +228,9 @@ Rectangle {
     function manageSound(){
         checkMuted();
         if(root.muted){
-            soundIcon.source = "qrc:/resources/images/sound_icon_internet33.png";
+            soundIcon.source = Qt.resolvedUrl("qrc:/resources/images/sound_icon_internet33.png");
         }else{
-            soundIcon.source = "qrc:/resources/images/sound_icon_internet31.png";
+            soundIcon.source = Qt.resolvedUrl("qrc:/resources/images/sound_icon_internet31.png");
         }
         musicPlayer.audioOutput.muted = root.muted;
     }
@@ -238,7 +238,7 @@ Rectangle {
     Item {
         id: volumeContainer
         width: 80
-        height: 1*root.width/3 + 80
+        height: root.height*0.6  + 80
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 50
@@ -246,7 +246,7 @@ Rectangle {
 
         Slider {
             id: volumeSlider
-            height: root.width*0.29
+            height: root.height*0.52
             width: root.height*0.1
             value: 0.5
             anchors.bottom: parent.bottom
@@ -306,7 +306,7 @@ Rectangle {
             anchors.top: parent.top
             anchors.bottom: volumeSlider.top
             anchors.topMargin: 0
-            source: "qrc:/resources/images/sound_icon_internet31.png"
+            source: Qt.resolvedUrl("qrc:/resources/images/sound_icon_internet31.png")
             anchors.horizontalCenter: parent.horizontalCenter
             fillMode: Image.PreserveAspectFit
 

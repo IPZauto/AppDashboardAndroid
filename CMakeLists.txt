@@ -26,6 +26,8 @@ qt_add_qml_module(appAppDashboardAndroid
         qml/NavScreen.qml
         qml/ReverseScreen.qml
         qml/PlayStopButton.qml
+        qml/LandscapeMain.qml
+        qml/PortraitMain.qml
         RESOURCES resources.qrc
 )
 
