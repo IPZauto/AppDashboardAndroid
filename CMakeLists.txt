@@ -28,6 +28,8 @@ qt_add_qml_module(appAppDashboardAndroid
         qml/PlayStopButton.qml
         qml/LandscapeMain.qml
         qml/PortraitMain.qml
+        qml/Separator.qml
+        qml/TemperatureScreen.qml
         RESOURCES resources.qrc
 )
 
@@ -44,6 +46,16 @@ qt_add_resources(appAppDashboardAndroid "resources"
         resources/images/arrow_forward_icon.png
         resources/images/sound_icon_internet31.png
         resources/images/sound_icon_internet33.png
+        resources/images/car_fan_low_left_icon.png
+        resources/images/car_fan_low_mid_left_icon.png
+        resources/images/car_fan_mid_left_icon.png
+        resources/images/minus_icon.png
+        resources/images/plus_icon.png
+        resources/images/fan_icon.png
+        resources/images/seat_heat_left_icon.png
+	resources/images/steering_wheel_heat_icon.png
+        resources/images/windshield_defrost_front_icon.png
+        resources/images/windshield_defrost_rear_icon.png
         resources/sounds/Harry_Styles_-_Daylight.mp3
         resources/sounds/Harry_Styles_-_Satellite.mp3
         resources/sounds/Hozier_-_Too_Sweet.mp3

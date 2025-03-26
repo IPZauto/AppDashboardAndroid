@@ -49,7 +49,7 @@ Window {
             anchors.verticalCenterOffset: -topBar.height
         }
 
-        ReverseScreen {
+        TemperatureScreen {
             height: mainScreen.height
             width: mainScreen.width
             visible: root.selectedView === 3
@@ -60,7 +60,7 @@ Window {
     function onMyViewSwitched(view){
         root.selectedView = view;
         //root.viewSent(view);
-        topBar.title = view === 0 ? "Nav" : (view === 1 ? "Globe" : (view === 2 ? "Music" : "Reverse"));
+        topBar.title = view === 0 ? "Nav" : (view === 1 ? "Globe" : (view === 2 ? "Music" : "Temperature"));
     }
 
     CustomMenuBar {

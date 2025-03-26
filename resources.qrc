@@ -10,6 +10,16 @@
         <file>resources/images/arrow_forward_icon.png</file>
         <file>resources/images/sound_icon_internet31.png</file>
         <file>resources/images/sound_icon_internet33.png</file>
+	<file>resources/images/car_fan_low_left_icon.png</file>
+        <file>resources/images/car_fan_low_mid_left_icon.png</file>
+        <file>resources/images/car_fan_mid_left_icon.png</file>
+        <file>resources/images/minus_icon.png</file>
+        <file>resources/images/plus_icon.png</file>
+	<file>resources/images/fan_icon.png</file>
+        <file>resources/images/seat_heat_left_icon.png</file>
+	<file>resources/images/steering_wheel_heat_icon.png</file>
+        <file>resources/images/windshield_defrost_front_icon.png</file>
+        <file>resources/images/windshield_defrost_rear_icon.png</file>
         <file>resources/sounds/Harry_Styles_-_Daylight.mp3</file>
         <file>resources/sounds/Harry_Styles_-_Satellite.mp3</file>
         <file>resources/sounds/Hozier_-_Too_Sweet.mp3</file>
