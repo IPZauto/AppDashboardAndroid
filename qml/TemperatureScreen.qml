@@ -10,15 +10,127 @@ Rectangle {
     //property string backgroundColor: "#011226"
     property string backgroundColor: "#000000"
     property string gradientColor: "#393f45"
-    property int rectWidth: root.width * 0.06
-    property int rectHeight: root.height * 0.20
+    property int rectWidth: root.width * 0.05
+    property int rectHeight: root.height * 0.25
+    property int fanPositionIconSize: root.height * 0.1
 
-    //TO DO: tempMenuBar position
+    property double rightTemperature: 20.0
+    property double leftTemperature: 20.0
+    property int rightAir: 1
+    property int leftAir: 1
+    property int rightAirPosition: 1
+    property int leftAirPosition: 1
+
+    function handleTemperatureChange(side: bool, increase: bool) { //side: true - right, false - left; increase: true - add .5, false subtract .5
+        let change = 0.5
+        if(!increase) {
+            change = -change
+        }
+
+        if(side){
+            // right side
+            root.rightTemperature += change
+            if(root.rightTemperature == 17.0){
+                rect1TempRight.enabled = false
+                rect1TempRight.color = "#10ffffff"
+            } else {
+                rect1TempRight.enabled = true
+                rect1TempRight.color = "#30ffffff"
+            }
+
+            if(root.rightTemperature == 30.0){
+                rect2TempRight.enabled = false
+                rect2TempRight.color = "#10ffffff"
+            } else {
+                rect2TempRight.enabled = true
+                rect2TempRight.color = "#30ffffff"
+            }
+
+            rightTempText.text = root.rightTemperature.toFixed(1)
+        }else{
+            // left side
+            root.leftTemperature += change
+            if(root.leftTemperature == 17.0){
+                rect1TempLeft.enabled = false
+                rect1TempLeft.color = "#10ffffff"
+            } else {
+                rect1TempLeft.enabled = true
+                rect1TempLeft.color = "#30ffffff"
+            }
+
+            if(root.leftTemperature == 30.0){
+                rect2TempLeft.enabled = false
+                rect2TempLeft.color = "#10ffffff"
+            } else {
+                rect2TempLeft.enabled = true
+                rect2TempLeft.color = "#30ffffff"
+            }
+            leftTempText.text = root.leftTemperature.toFixed(1)
+        }
+    }
+
+    function handleAirChange(side: bool, increase: bool) { //side: true - right, false - left; increase: true - add .5, false subtract .5
+        let change = 1
+        if(!increase) {
+            change = -change
+        }
+
+        if(side){
+            // right side
+            root.rightAir += change
+            if(root.rightAir == 0){
+                rect1AirRight.enabled = false
+                rect1AirRight.color = "#10ffffff"
+            } else {
+                rect1AirRight.enabled = true
+                rect1AirRight.color = "#30ffffff"
+            }
+
+            if(root.rightAir == 5){
+                rect2AirRight.enabled = false
+                rect2AirRight.color = "#10ffffff"
+            }else{
+                rect2AirRight.enabled = true
+                rect2AirRight.color = "#30ffffff"
+            }
+
+            rightAirText.text = root.rightAir.toString()
+        }else{
+            // left side
+            root.leftAir += change
+            if(root.leftAir == 0){
+                rect1AirLeft.enabled = false
+                rect1AirLeft.color = "#10ffffff"
+            }else {
+                rect1AirLeft.enabled = true
+                rect1AirLeft.color = "#30ffffff"
+            }
+
+            if(root.leftAir == 5){
+                rect2AirLeft.enabled = false
+                rect2AirLeft.color = "#10ffffff"
+            }else{
+                rect2AirLeft.enabled = true
+                rect2AirLeft.color = "#30ffffff"
+            }
+
+            leftAirText.text = root.leftAir.toString()
+        }
+    }
+
+    // function handleAirPositionChange(side: bool, mode: int){
+    //     if(side){
+    //         root.rightAirPosition = mode
+    //     }else{
+    //         root.leftAirPosition = mode
+    //     }
+    // }
+
 
     Rectangle {
         id: leftPassenger
         height: root.height - tempMenuBar.height
-        width: root.width*0.5
+        width: root.width * 0.5
         anchors.top: root.top
         anchors.left: root.left
 
@@ -32,11 +144,11 @@ Rectangle {
             id: leftTempRow
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: leftAirColumn.right
-            anchors.leftMargin: 100
+            anchors.leftMargin: root.width * 0.04
 
             Rectangle {
                 width: root.rectWidth * 0.25
-                height: root.rectHeight*2 + 15
+                height: root.rectHeight * 2 + leftTempColumn.spacing
 
                 gradient: Gradient {
                     orientation: Gradient.Vertical
@@ -49,7 +161,7 @@ Rectangle {
 
             Column {
                 id: leftTempColumn
-                spacing: 15
+                spacing: root.height * 0.014
 
                 Rectangle {
                     id: rect2TempLeft
@@ -58,7 +170,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "#30ffffff"
                     border.color: "#ffffff"
-                    border.width: 3
+                    border.width: width * 0.03125
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/plus_icon.png")
@@ -69,6 +181,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
+                        onClicked: root.handleTemperatureChange(false, true)
                     }
                 }
 
@@ -79,7 +192,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "#30ffffff"
                     border.color: "#ffffff"
-                    border.width: 3
+                    border.width: width * 0.03125
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/minus_icon.png")
@@ -90,6 +203,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
+                        onClicked: root.handleTemperatureChange(false, false)
                     }
                 }
             }
@@ -101,8 +215,7 @@ Rectangle {
             height: root.rectHeight * 0.5
             width: fanLeft.width + leftAirText.width
             anchors.bottom: leftTempText.top
-            anchors.bottomMargin: 40
-            //anchors.horizontalCenter: leftTempText.horizontalCenter
+            anchors.bottomMargin: root.height * 0.037
             anchors.left: leftTempText.left
 
             Image {
@@ -117,17 +230,16 @@ Rectangle {
                 id: leftAirText
                 text: "1"
                 anchors.verticalCenter: parent.verticalCenter
-                font.pointSize: 80
-                anchors.left: fanLeft.right
+                font.pointSize: root.height * 0.074
             }
         }
 
         Column {
             id: leftAirColumn
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 15
+            spacing: root.height * 0.014
             anchors.left: parent.left
-            anchors.leftMargin: 80
+            anchors.leftMargin: root.width * 0.04
 
             Rectangle {
                 id: rect2AirLeft
@@ -136,7 +248,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "#30ffffff"
                 border.color: "#ffffff"
-                border.width: 3
+                border.width: width * 0.03125
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_forward_icon.png")
@@ -148,6 +260,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
+                    onClicked: root.handleAirChange(false, true)
                 }
             }
 
@@ -158,7 +271,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "#30ffffff"
                 border.color: "#ffffff"
-                border.width: 3
+                border.width: width * 0.03125
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_back_icon.png")
@@ -170,6 +283,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
+                    onClicked: root.handleAirChange(false, false)
                 }
             }
         }
@@ -178,36 +292,52 @@ Rectangle {
         CustomText {
             id: leftTempText
             text: "20.0"
-            font.pointSize: 120
+            font.pointSize: root.height * 0.12
             anchors.right: parent.right
-            anchors.rightMargin: (root.width*0.5 - 2* root.rectWidth - 2* 80 - root.rectWidth * 0.25 - width)*0.5
+            anchors.rightMargin: (root.width * 0.5 - 2 * root.rectWidth - 2 * root.width * 0.04 - root.rectWidth * 0.25 - width) * 0.5
             anchors.verticalCenter: parent.verticalCenter
         }
 
 
-        Row { //TO DO: margin - math
+        Row { //TO DO: margin - math  WTF why rightTempText.x ok and left not?
             anchors.right: parent.right
-            anchors.rightMargin: 0
-            spacing: 50
+            anchors.rightMargin: (root.width * 0.5 - 2 * root.rectWidth - 2 * root.width * 0.04 - root.rectWidth * 0.25 - width) * 0.5
+            spacing: root.width * 0.026
             anchors.top: leftTempText.bottom
-            anchors.topMargin: 50
+            anchors.topMargin: (root.height - rightTempText.x - leftTempText.height - tempMenuBar.height - height) * 0.5
 
             Image {
+                id: fan1Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_left_icon.png")
-                width: 100
+                width: root.fanPositionIconSize
                 height: width
+                opacity: root.leftAirPosition === 1 ? 1.0 : 0.5
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.leftAirPosition = 1
+                }
             }
             Image {
+                id: fan2Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_mid_left_icon.png")
-                width: 100
+                width: root.fanPositionIconSize
                 height: width
-                opacity: 0.5
+                opacity: root.leftAirPosition === 2 ? 1.0 : 0.5
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.leftAirPosition = 2
+                }
             }
             Image {
+                id: fan3Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_mid_left_icon.png")
-                width: 100
+                width: root.fanPositionIconSize
                 height: width
-                opacity: 0.5
+                opacity: root.leftAirPosition === 3 ? 1.0 : 0.5
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.leftAirPosition = 3
+                }
             }
         }
     }
@@ -222,7 +352,7 @@ Rectangle {
         id: rightPassenger
         height: root.height - tempMenuBar.height
         anchors.right: parent.right
-        width: root.width*0.5
+        width: root.width * 0.5
         anchors.top: root.top
         anchors.rightMargin: 0
 
@@ -237,16 +367,14 @@ Rectangle {
             height: root.rectHeight * 0.5
             width: fanRight.width + rightAirText.width
             anchors.bottom: rightTempText.top
-            anchors.bottomMargin: 40
-            //anchors.horizontalCenter: leftTempText.horizontalCenter
-            //anchors.left: rightTempText.left
+            anchors.bottomMargin: root.height * 0.037
             anchors.right: rightTempText.right
 
             CustomText {
                 id: rightAirText
                 text: "1"
                 anchors.verticalCenter: parent.verticalCenter
-                font.pointSize: 80
+                font.pointSize: root.height * 0.074
             }
 
             Image {
@@ -256,16 +384,15 @@ Rectangle {
                 height: width
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.leftMargin: 20
-                //anchors.left: rightAirText.right
             }
         }
 
         CustomText {
             id: rightTempText
             text: "20.0"
-            font.pointSize: 120
+            font.pointSize: root.height * 0.111
             anchors.left: parent.left
-            anchors.leftMargin: (root.width*0.5 - 2* root.rectWidth - 2* 80 - root.rectWidth * 0.25 - width)*0.5
+            anchors.leftMargin: (root.width * 0.5 - 2 * root.rectWidth - 2 * root.width * 0.04 - root.rectWidth * 0.25 - width) * 0.5
             anchors.verticalCenter: parent.verticalCenter
         }
 
@@ -274,12 +401,10 @@ Rectangle {
         Column {
             id: rightAirColumn
             anchors.verticalCenter: parent.verticalCenter
-            // anchors.left: parent.left
-            // anchors.leftMargin: 50
             anchors.right: parent.right
-            anchors.rightMargin: 80
+            anchors.rightMargin: root.width * 0.04
             anchors.verticalCenterOffset: 0
-            spacing: 15
+            spacing: root.height * 0.014
 
             Rectangle {
                 id: rect2AirRight
@@ -288,7 +413,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "#30ffffff"
                 border.color: "#ffffff"
-                border.width: 3
+                border.width: width * 0.03125
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_forward_icon.png")
@@ -300,6 +425,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
+                    onClicked: root.handleAirChange(true, true)
                 }
             }
 
@@ -310,7 +436,7 @@ Rectangle {
                 anchors.horizontalCenter: parent.horizontalCenter
                 color: "#30ffffff"
                 border.color: "#ffffff"
-                border.width: 3
+                border.width: width * 0.03125
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_back_icon.png")
@@ -322,6 +448,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
+                    onClicked: root.handleAirChange(true, false)
                 }
             }
         }
@@ -329,16 +456,13 @@ Rectangle {
         Row {
             id: rightTempRow
             anchors.right: rightAirColumn.left
-            anchors.rightMargin: 80
+            anchors.rightMargin: root.width * 0.04
             anchors.verticalCenter: parent.verticalCenter
 
 
             Column {
                 id: rightTempColumn
-                // anchors.verticalCenter: parent.verticalCenter
-                // anchors.right: parent.right
-                // anchors.rightMargin: 50
-                spacing: 15
+                spacing: root.height * 0.014
 
                 Rectangle {
                     id: rect2TempRight
@@ -347,7 +471,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "#30ffffff"
                     border.color: "#ffffff"
-                    border.width: 3
+                    border.width: width * 0.03125
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/plus_icon.png")
@@ -358,6 +482,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
+                        onClicked: root.handleTemperatureChange(true, true)
                     }
                 }
 
@@ -368,7 +493,7 @@ Rectangle {
                     anchors.horizontalCenter: parent.horizontalCenter
                     color: "#30ffffff"
                     border.color: "#ffffff"
-                    border.width: 3
+                    border.width: width * 0.03125
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/minus_icon.png")
@@ -379,13 +504,14 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
+                        onClicked: root.handleTemperatureChange(true, false)
                     }
                 }
             }
 
             Rectangle {
                 width: root.rectWidth * 0.25
-                height: root.rectHeight*2 + 15
+                height: root.rectHeight * 2 + rightTempColumn.spacing
 
                 gradient: Gradient {
                     orientation: Gradient.Vertical
@@ -397,32 +523,47 @@ Rectangle {
         }
 
         Row {
-            // TO DO: margin - math
             anchors.left: parent.left
-            spacing: 50
+            spacing: root.width * 0.026
             anchors.top: rightTempText.bottom
-            anchors.topMargin: 50
+            anchors.topMargin: (root.height - rightTempText.x - rightTempText.height - tempMenuBar.height - height) * 0.5
+            anchors.leftMargin: (root.width * 0.5 - 2 * root.rectWidth - 2 * root.width * 0.04 - root.rectWidth * 0.25 - width) * 0.5
 
             Image {
+                id: fan1Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_left_icon.png")
-                width: 100
+                width: root.fanPositionIconSize
                 height: width
-                opacity: 1.0
                 mirror: true
+                opacity: root.rightAirPosition === 1 ? 1.0 : 0.5
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.rightAirPosition = 1
+                }
             }
             Image {
+                id: fan2Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_mid_left_icon.png")
-                width: 100
+                width: root.fanPositionIconSize
                 height: width
-                opacity: 0.5
                 mirror: true
+                opacity: root.rightAirPosition === 2 ? 1.0 : 0.5
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.rightAirPosition = 2
+                }
             }
             Image {
+                id: fan3Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_mid_left_icon.png")
-                width: 100
+                width: root.fanPositionIconSize
                 height: width
-                opacity: 0.5
                 mirror: true
+                opacity: root.rightAirPosition === 3 ? 1.0 : 0.5
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: root.rightAirPosition = 3
+                }
             }
         }
     }
@@ -442,7 +583,7 @@ Rectangle {
         Rectangle {
             id: topLine
             width: tempMenuBar.width
-            height: 4
+            height: root.height * 0.0037
             color: "#ffffff"
             anchors.top: tempMenuBar.top
             anchors.margins: 0
@@ -452,17 +593,18 @@ Rectangle {
         Row {
             id: row
             width: tempMenuBar.width
-            height: root.height * 0.13
+            height: buttonHeight + lightHeight + lightTopMargin
             anchors.top: topLine.bottom
 
-            property int btnWidth: (row.width - root.separatorWidth*7)*0.125
-            property int lightHeight: 10
-            property double lightWidth: btnWidth - root.width*0.015
+            property int btnWidth: (row.width - root.separatorWidth * 7) * 0.125
+            property int lightHeight: root.height * 0.0093
+            property double lightWidth: btnWidth - root.width * 0.015
             property int lightTopMargin: root.width * 0.005
-            property string lightColor: "#e6a340" //on?
+            property string lightColorOn: "#e6a340" //on?
             //property string lightColor: "#b2c4d9"
-            //property string lightColor: "#5c646b" //off
-            property int buttonHeight: root.height * 0.111
+            property string lightColorOff: "#5c646b" //off
+            property int buttonHeight: root.height * 0.12
+            property int imageSize: root.height * 0.09
 
             Item{
                 id: btn1Container
@@ -471,11 +613,13 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 0
 
+                property bool isOn: false
+
                 Rectangle {
                     id: light1
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn1Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -490,11 +634,16 @@ Rectangle {
                     background: Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/seat_heat_left_icon.png")
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: 110
-                        height: 110
+                        width: row.imageSize
+                        height: row.imageSize
                         anchors.verticalCenter: parent.verticalCenter
                         mirror: true
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn1Container.isOn = !btn1Container.isOn
                 }
             }
 
@@ -502,22 +651,20 @@ Rectangle {
                 id: separator1
                 height: row.height
                 width: root.separatorWidth
-                //anchors.left: btn1Container.right
-                //anchors.leftMargin: 0
             }
 
             Item {
                 id: btn2Container
                 width: row.btnWidth
                 height: row.buttonHeight + row.lightHeight + row.lightTopMargin
-                //anchors.left: separator1.right
-                //anchors.leftMargin: 0
+
+                property bool isOn: false
 
                 Rectangle {
                     id: light2
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn2Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -531,11 +678,16 @@ Rectangle {
 
                     background: Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/steering_wheel_heat_icon.png")
-                        width: 100
-                        height: 100
+                        width: row.imageSize
+                        height: row.imageSize
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.centerIn: parent
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn2Container.isOn = !btn2Container.isOn
                 }
             }
 
@@ -543,23 +695,20 @@ Rectangle {
                 id: separator2
                 height: row.height
                 width: root.separatorWidth
-                //anchors.left: btn2Container.right
-                //anchors.leftMargin: 0
             }
 
             Item {
-
                 id: btn3Container
                 width: row.btnWidth
                 height: row.buttonHeight + row.lightHeight + row.lightTopMargin
-                //anchors.left: separator2.right
-                //anchors.leftMargin: 0
+
+                property bool isOn: false
 
                 Rectangle {
                     id: light3
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn3Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -569,8 +718,6 @@ Rectangle {
                     id: btn3
                     width: row.btnWidth
                     height: row.buttonHeight
-                    //anchors.left: separator2.right
-                    //anchors.leftMargin: 0
                     anchors.top: light3.bottom
 
                     background: Rectangle {
@@ -579,12 +726,17 @@ Rectangle {
 
                         CustomText {
                             text: "AUTO"
-                            font.pointSize: 48
+                            font.pointSize: root.height * 0.045
                             anchors.centerIn: parent
                             anchors.verticalCenterOffset: -10
                             font.bold: true
                         }
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn3Container.isOn = !btn3Container.isOn
                 }
             }
 
@@ -592,22 +744,20 @@ Rectangle {
                 id: separator3
                 height: row.height
                 width: root.separatorWidth
-                //anchors.left: btn3Container.right
-                //anchors.leftMargin: 0
             }
 
             Item {
                 id: btn4Container
                 width: row.btnWidth
                 height: row.buttonHeight + row.lightHeight + row.lightTopMargin
-                //anchors.left: separator3.right
-                //anchors.leftMargin: 0
+
+                property bool isOn: false
 
                 Rectangle {
                     id: light4
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn4Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -617,8 +767,6 @@ Rectangle {
                     id: btn4
                     width: row.btnWidth
                     height: row.buttonHeight
-                    //anchors.left: separator3.right
-                    //anchors.leftMargin: 0
                     anchors.top: light4.bottom
 
                     background: Rectangle {
@@ -627,12 +775,17 @@ Rectangle {
 
                         CustomText {
                             text: "A/C"
-                            font.pointSize: 48
+                            font.pointSize: root.height * 0.045
                             anchors.centerIn: parent
                             anchors.verticalCenterOffset: -10
                             font.bold: true
                         }
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn4Container.isOn = !btn4Container.isOn
                 }
             }
 
@@ -640,22 +793,20 @@ Rectangle {
                 id: separator4
                 height: row.height
                 width: root.separatorWidth
-                //anchors.left: btn4Container.right
-                //anchors.leftMargin: 0
             }
 
             Item {
                 id: btn5Container
                 width: row.btnWidth
                 height: row.buttonHeight + row.lightHeight + row.lightTopMargin
-                //anchors.left: separator4.right
-                //anchors.leftMargin: 0
+
+                property bool isOn: false
 
                 Rectangle {
                     id: light5
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn5Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -665,16 +816,14 @@ Rectangle {
                     id: btn5
                     width: row.btnWidth
                     height: row.buttonHeight
-                    //anchors.left: separator5.right
-                    //anchors.leftMargin: 0
                     anchors.top: light5.bottom
 
                     background: Image {
                         id:frontHeatIcon
                         source: Qt.resolvedUrl("qrc:/resources/images/windshield_defrost_front_icon.png")
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: 110
-                        height: 90
+                        width: row.imageSize
+                        height: row.imageSize * 0.9
                         anchors.top: parent.top
 
                         CustomText {
@@ -683,10 +832,15 @@ Rectangle {
                             anchors.top: frontHeatIcon.bottom
                             anchors.topMargin: -50
                             font.bold: true
-                            font.pointSize: 26
+                            font.pointSize: root.height * 0.03
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn5Container.isOn = !btn5Container.isOn
                 }
             }
 
@@ -694,22 +848,20 @@ Rectangle {
                 id: separator5
                 height: row.height
                 width: root.separatorWidth
-                //anchors.left: btn5Container.right
-                //anchors.leftMargin: 0
             }
 
             Item {
                 id: btn6Container
                 width: row.btnWidth
                 height: row.buttonHeight + row.lightHeight + row.lightTopMargin
-                //anchors.left: separator5.right
-                //anchors.leftMargin: 0
+
+                property bool isOn: false
 
                 Rectangle {
                     id: light6
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn6Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -719,16 +871,14 @@ Rectangle {
                     id: btn6
                     width: row.btnWidth
                     height: row.buttonHeight
-                    //anchors.left: separator5.right
-                    //anchors.leftMargin: 0
                     anchors.top: light6.bottom
 
                     background: Image {
                         id: rearHeatIcon
                         source: Qt.resolvedUrl("qrc:/resources/images/windshield_defrost_rear_icon.png")
                         anchors.horizontalCenter: parent.horizontalCenter
-                        width: 110
-                        height: 90
+                        width: row.imageSize
+                        height: row.imageSize * 0.9
                         anchors.top: parent.top
 
                         CustomText {
@@ -737,10 +887,15 @@ Rectangle {
                             anchors.top: rearHeatIcon.bottom
                             anchors.topMargin: -50
                             font.bold: true
-                            font.pointSize: 26
+                            font.pointSize: root.height * 0.03
                             anchors.horizontalCenter: parent.horizontalCenter
                         }
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn6Container.isOn = !btn6Container.isOn
                 }
             }
 
@@ -748,22 +903,20 @@ Rectangle {
                 id: separator6
                 height: row.height
                 width: root.separatorWidth
-                //anchors.left: btn6Container.right
-                //anchors.leftMargin: 0
             }
 
             Item {
                 id: btn7Container
                 width: row.btnWidth
                 height: row.buttonHeight + row.lightHeight + row.lightTopMargin
-                //anchors.left: separator6.right
-                //anchors.leftMargin: 0
+
+                property bool isOn: false
 
                 Rectangle {
                     id: light7
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn7Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -773,8 +926,6 @@ Rectangle {
                     id: btn7
                     width: row.btnWidth
                     height: row.buttonHeight
-                    //anchors.left: separator6.right
-                    //anchors.leftMargin: 0
                     anchors.top: light7.bottom
 
                     background: Rectangle {
@@ -783,12 +934,17 @@ Rectangle {
 
                         CustomText {
                             text: "SYNC"
-                            font.pointSize: 48
+                            font.pointSize: root.height * 0.045
                             anchors.centerIn: parent
                             anchors.verticalCenterOffset: -10
                             font.bold: true
                         }
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn7Container.isOn = !btn7Container.isOn
                 }
             }
 
@@ -796,22 +952,20 @@ Rectangle {
                 id: separator7
                 height: row.height
                 width: root.separatorWidth
-                //anchors.left: btn7Container.right
-                //anchors.leftMargin: 0
             }
 
             Item {
                 id: btn8Container
                 width: row.btnWidth
                 height: row.buttonHeight + row.lightHeight + row.lightTopMargin
-                //anchors.left: separator7.right
-                //anchors.leftMargin: 0
+
+                property bool isOn: false
 
                 Rectangle {
                     id: light8
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: row.lightColor
+                    color: btn8Container.isOn ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -821,15 +975,19 @@ Rectangle {
                     id: btn8
                     width: row.btnWidth
                     height: row.buttonHeight
-                    //anchors.left: separator7.right
                     anchors.top: light8.bottom
 
                     background: Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/seat_heat_left_icon.png")
-                        width: 110
-                        height: 110
+                        width: row.imageSize
+                        height: row.imageSize
                         anchors.centerIn: parent
                     }
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: btn8Container.isOn = !btn8Container.isOn
                 }
             }
         }

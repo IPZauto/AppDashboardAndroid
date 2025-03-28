@@ -6,6 +6,8 @@ Window {
     height: 1080
     visible: true
     color: "#000000"
+    visibility: Window.FullScreen
+
 
     property int selectedView: 0
     property bool isLandscape: root.width > root.height
