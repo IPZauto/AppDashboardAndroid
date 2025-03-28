@@ -6,7 +6,8 @@ Window {
     height: 1080
     visible: true
     color: "#000000"
-    visibility: Window.FullScreen
+    property bool fullScreenOn: true
+    visibility: fullScreenOn ? Window.FullScreen : Window.Windowed
 
 
     property int selectedView: 0
@@ -72,6 +73,7 @@ Window {
         anchors.bottomMargin: 0
         z: 2
         onViewSwitched: (view) => root.onMyViewSwitched(view)
+        onFullScreenChaned: (fullScreenOn) => root.fullScreenOn = fullScreenOn
         isLandscapeLayout: root.isLandscape
     }
 

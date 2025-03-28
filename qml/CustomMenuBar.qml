@@ -5,6 +5,7 @@ Item {
     height: menubar.height + line.height
 
     signal viewSwitched(int view)
+    signal fullScreenChaned(bool fullScreenOn)
     property bool isLandscapeLayout: true
     property int iconSize: isLandscapeLayout ? 120 : 150
 
@@ -52,11 +53,16 @@ Item {
                 width: root.iconSize
                 height: root.iconSize
                 property int id: 1
+                property bool fullScreenOn: true
                 background: Image {
                     id: image
                     source: Qt.resolvedUrl("qrc:/resources/images/icon_globe1.png")
                 }
-                onClicked: root.buttonHandler(globeButton.id)
+                //onClicked: root.buttonHandler(globeButton.id)
+                onClicked: {
+                    fullScreenOn = !fullScreenOn;
+                    root.fullScreenChaned(fullScreenOn)
+                }
             }
 
             MenuButton {
