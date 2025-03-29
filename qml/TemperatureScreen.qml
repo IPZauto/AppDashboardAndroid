@@ -138,7 +138,7 @@ Rectangle {
             var change = (root.leftTemperature - root.rightTemperature) * 2
             var n = Math.abs(change)
             for(var i=0; i<n; i++){
-                root.handleTemperatureChange(true, change>0, true) //false because we want the right side decided on by sync
+                root.handleTemperatureChange(true, change>0, true)
             }
 
             change = root.leftAir - root.rightAir
