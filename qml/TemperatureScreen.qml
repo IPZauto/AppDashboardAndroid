@@ -20,15 +20,21 @@ Rectangle {
     property int leftAir: 1
     property int rightAirPosition: 1
     property int leftAirPosition: 1
+    property bool syncOn: false
 
-    function handleTemperatureChange(side: bool, increase: bool) { //side: true - right, false - left; increase: true - add .5, false subtract .5
+    function handleTemperatureChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract .5
         let change = 0.5
         if(!increase) {
             change = -change
         }
 
-        if(side){
+        if(side || root.syncOn){
             // right side
+            if(side && !syncFun){
+                root.syncOn = false
+                btn7Container.isOn = false
+            }
+
             root.rightTemperature += change
             if(root.rightTemperature == 17.0){
                 rect1TempRight.enabled = false
@@ -45,10 +51,12 @@ Rectangle {
                 rect2TempRight.enabled = true
                 rect2TempRight.color = "#30ffffff"
             }
+            rightTempText.text = root.rightTemperature.toFixed(1)  
+        }
 
-            rightTempText.text = root.rightTemperature.toFixed(1)
-        }else{
+        if(!side){
             // left side
+
             root.leftTemperature += change
             if(root.leftTemperature == 17.0){
                 rect1TempLeft.enabled = false
@@ -69,14 +77,19 @@ Rectangle {
         }
     }
 
-    function handleAirChange(side: bool, increase: bool) { //side: true - right, false - left; increase: true - add .5, false subtract .5
+    function handleAirChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract 1
         let change = 1
         if(!increase) {
             change = -change
         }
 
-        if(side){
+        if(side || root.syncOn){
             // right side
+            if(side && !syncFun){
+                root.syncOn = false
+                btn7Container.isOn = false
+            }
+
             root.rightAir += change
             if(root.rightAir == 0){
                 rect1AirRight.enabled = false
@@ -95,7 +108,8 @@ Rectangle {
             }
 
             rightAirText.text = root.rightAir.toString()
-        }else{
+        }
+        if(!side){
             // left side
             root.leftAir += change
             if(root.leftAir == 0){
@@ -115,6 +129,23 @@ Rectangle {
             }
 
             leftAirText.text = root.leftAir.toString()
+        }
+    }
+
+    function handleSyncChange(){
+        root.syncOn = !syncOn
+        if(syncOn){
+            var change = (root.leftTemperature - root.rightTemperature) * 2
+            var n = Math.abs(change)
+            for(var i=0; i<n; i++){
+                root.handleTemperatureChange(true, change>0, true) //false because we want the right side decided on by sync
+            }
+
+            change = root.leftAir - root.rightAir
+            n = Math.abs(change)
+            for(var i=0; i<n; i++){
+                root.handleAirChange(true, change>0, true)
+            }
         }
     }
 
@@ -944,7 +975,10 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn7Container.isOn = !btn7Container.isOn
+                    onClicked: {
+                        btn7Container.isOn = !btn7Container.isOn
+                        root.handleSyncChange()
+                    }
                 }
             }
 
