@@ -30,6 +30,8 @@ qt_add_qml_module(appAppDashboardAndroid
         qml/PortraitMain.qml
         qml/Separator.qml
         qml/TemperatureScreen.qml
+        qml/TemperatureDriver.qml
+        qml/TemperaturePassenger.qml
         RESOURCES resources.qrc
 )
 

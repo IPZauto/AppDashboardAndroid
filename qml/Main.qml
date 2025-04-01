@@ -12,6 +12,7 @@ Window {
 
     property int selectedView: 0
     property bool isLandscape: root.width > root.height
+    property bool tempLandscpae: root.width > root.height && root.width > 1200
     //signal viewSent(int view)
 
     TopBar{
@@ -57,6 +58,7 @@ Window {
             width: mainScreen.width
             visible: root.selectedView === 3
             enabled: root.selectedView === 3
+            landscape: root.tempLandscpae
         }
     }
 

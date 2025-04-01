@@ -1,73 +1,60 @@
 import QtQuick
 
-Rectangle {
+Item {
     id: root
-    width: 1080
-    height: 1920
-    visible: true
-    color: "#000000"
 
-    property int selectedView: 0
-    signal viewSent(int view)
+    property bool driver: true
 
-    TopBar{
-        id: topBar
-        width: root.width
-        anchors.top: parent.top
-        anchors.topMargin: 0
-        z: 2
-    }
+    property double rightTemperature: 20.0
+    property double leftTemperature: 21.0
+    property int rightAir: 1
+    property int leftAir: 1
+    property int rightAirPosition: 1
+    property int leftAirPosition: 1
+    property bool syncOn: false
 
-    Item {
-        id: mainScreen
-        width: root.width
-        height: root.height - (topBar.height + menu.height)
-        anchors.top: root.selectedView == 2 ? root.top : topBar.bottom
-        anchors.topMargin: 0
 
-        NavScreen {
-            height: mainScreen.height
-            width: mainScreen.width
-            visible: root.selectedView === 0
-            enabled: root.selectedView === 0
-        }
+    Loader {
+        id: componentLoader
+        anchors.fill: parent
+        source: root.driver ? Qt.resolvedUrl("TemperatureDriver.qml") : Qt.resolvedUrl("TemperaturePassenger.qml")
+        onLoaded: {
+            if(componentLoader.item){
+                componentLoader.item.passengerSwitched.connect((pass) => {root.driver = pass})
+                componentLoader.item.passengerTempSwitched.connect(root.handleTempSwitch)
+                componentLoader.item.temperature = root.driver ? root.leftTemperature : root.rightTemperature
+                componentLoader.item.passengerAirSwitched.connect(root.handleAirSwitch)
+                componentLoader.item.air = root.driver ? root.leftAir : root.rightAir
+                componentLoader.item.passengerAirPositionSwitched.connect(root.handleAirPositionSwitch)
+                componentLoader.item.airPosition = root.driver ? root.leftAirPosition : root.rightAirPosition
 
-        GlobeScreen {
-            height: mainScreen.height
-            width: mainScreen.width
-            visible: root.selectedView === 1
-            enabled: root.selectedView === 1
-        }
-
-        MusicScreen {
-            height: root.height
-            width: mainScreen.width
-            visible: root.selectedView === 2
-            enabled: root.selectedView === 2
-            anchors.top: root.top
-        }
-
-        ReverseScreen {
-            height: mainScreen.height
-            width: mainScreen.width
-            visible: root.selectedView === 3
-            enabled: root.selectedView === 3
+            }
         }
     }
 
-    function onViewSwitched(view){
-        root.selectedView = view;
-        root.viewSent(view);
-        topBar.title = view === 0 ? "Nav" : (view === 1 ? "Globe" : (view === 2 ? "Music" : "Reverse"));
+    function handleTempSwitch(pass: bool, temp: double) {
+        if(pass){
+            // driver
+            root.leftTemperature = temp
+        }else{
+            root.rightTemperature = temp
+        }
     }
 
-    CustomMenuBar {
-        id: menu
-        width:root.width
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        z: 2
-        onViewSwitched: (view) => root.onViewSwitched(view)
+    function handleAirSwitch(pass: bool, air: int) {
+        if(pass){
+            // driver
+            root.leftAir = air
+        }else{
+            root.rightAir = air
+        }
     }
 
+    function handleAirPositionSwitch(pass: bool, pos: int){
+        if(pass){
+            root.leftAirPosition = pos
+        }else{
+            root.rightAirPosition = pos
+        }
+    }
 }
