@@ -1,11 +1,23 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+
+#include "game.h"
+#include "networkdata.h"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    Game backend;
+
+    NetworkData network(&app,TELEMETREY_URL,&backend);
+
+    engine.rootContext()->setContextProperty("backend", &backend);
+    engine.rootContext()->setContextProperty("network",&network);
+
     const QUrl url(QStringLiteral("qrc:/AppDashboardAndroid/qml/Main.qml"));
     QObject::connect(
         &engine,

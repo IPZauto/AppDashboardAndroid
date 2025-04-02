@@ -6,6 +6,9 @@ Item {
     property int cmargin: 40
     property string title: "Nav"
     property bool isLandscapeLayout: true
+    property string date: "18 grudnia 2024"
+    property string time: "12:03"
+    property string dayAbbr: "Sob"
 
     Item {
         id: bar
@@ -16,7 +19,7 @@ Item {
 
         CustomText {
             id: dateDay
-            text: "Sob"
+            text: root.dayAbbr
             font.pointSize: root.isLandscapeLayout ? 26 : 32
             anchors.left: parent.left
             anchors.leftMargin: root.cmargin
@@ -25,7 +28,7 @@ Item {
 
         CustomText {
             id: dateTime
-            text: "13:09"
+            text: root.time
             font.pointSize: root.isLandscapeLayout ? 26 : 32
             anchors.left: dateDay.right
             anchors.leftMargin: root.cmargin
@@ -42,7 +45,7 @@ Item {
 
         CustomText {
             id: dateLong
-            text: "18 grudnia 2024"
+            text: root.date
             font.pointSize: root.isLandscapeLayout ? 26 : 32
             anchors.right: parent.right
             anchors.rightMargin: root.cmargin

@@ -19,10 +19,18 @@ Rectangle {
     property int airPosition: 1
     property bool syncOn: false
 
+    property bool btn1On: false
+    property bool btn2On: false
+    property bool btn3On: false
+    property bool btn4On: false
+
     signal passengerSwitched(bool passenger) // true - driver, false - right passenger
     signal passengerTempSwitched(bool passenger, double temp)
     signal passengerAirSwitched(bool passenger, int air)
     signal passengerAirPositionSwitched(bool passenger, int pos)
+    signal passengerBtnSwitched(bool passenger, int btn)
+
+    signal syncSwitched()
 
 
     function handleTemperatureChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract .5
@@ -43,31 +51,34 @@ Rectangle {
         if(!side){
             // left side
             root.air += change
-            //airText.text = root.air.toString()
             root.passengerAirSwitched(true, root.air)
         }
     }
 
-    // function handleSyncChange(){
-    //     root.syncOn = !syncOn
-    //     if(syncOn){
-    //         var change = (root.temperature - root.rightTemperature) * 2
-    //         var n = Math.abs(change)
-    //         for(var i=0; i<n; i++){
-    //             root.handleTemperatureChange(true, change>0, true)
-    //         }
-
-    //         change = root.air - root.rightAir
-    //         n = Math.abs(change)
-    //         for(var i=0; i<n; i++){
-    //             root.handleAirChange(true, change>0, true)
-    //         }
-    //     }
-    // }
-
     function handleAirPositionChange(mode: int){
         root.airPosition = mode
         root.passengerAirPositionSwitched(true, mode)
+    }
+
+    function handleBtnChange(btn: int){
+        switch(btn){
+        case 1:
+            root.btn1On = !root.btn1On
+            root.passengerBtnSwitched(true, 1)
+            break
+        case 2:
+            root.btn2On = !root.btn2On
+            root.passengerBtnSwitched(true, 2)
+            break
+        case 3:
+            root.btn3On = !root.btn3On
+            root.passengerBtnSwitched(true, 3)
+            break
+        case 4:
+            root.btn4On = !root.btn4On
+            root.passengerBtnSwitched(true, 4)
+            break
+        }
     }
 
 
@@ -240,7 +251,7 @@ Rectangle {
         CustomText {
             id: leftTempText
             text: root.temperature.toFixed(1)
-            font.pointSize: root.height * 0.20
+            font.pointSize: root.height * 0.15
             anchors.right: switchToRightPassenger.left
             anchors.rightMargin: (root.width - 2 * root.rectWidth - 3 * root.width * 0.04 - root.rectWidth * 0.25 - width - switchToRightPassenger.width) * 0.5
             anchors.verticalCenter: parent.verticalCenter
@@ -353,7 +364,7 @@ Rectangle {
                     id: light1
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn1Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn1On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -377,7 +388,10 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn1Container.isOn = !btn1Container.isOn
+                    onClicked: {
+                        //btn1Container.isOn = !btn1Container.isOn
+                        root.handleBtnChange(1)
+                    }
                 }
             }
 
@@ -398,7 +412,7 @@ Rectangle {
                     id: light2
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn2Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn2On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -421,7 +435,10 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn2Container.isOn = !btn2Container.isOn
+                    onClicked: {
+                        //btn2Container.isOn = !btn2Container.isOn
+                        root.handleBtnChange(2)
+                    }
                 }
             }
 
@@ -442,7 +459,7 @@ Rectangle {
                     id: light3
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn3Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn3On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -470,7 +487,10 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn3Container.isOn = !btn3Container.isOn
+                    onClicked: {
+                        //btn3Container.isOn = !btn3Container.isOn
+                        root.handleBtnChange(3)
+                    }
                 }
             }
 
@@ -491,7 +511,7 @@ Rectangle {
                     id: light4
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn4Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn4On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -519,7 +539,10 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn4Container.isOn = !btn4Container.isOn
+                    onClicked: {
+                        //btn4Container.isOn = !btn4Container.isOn
+                        root.handleBtnChange(4)
+                    }
                 }
             }
         }

@@ -10,6 +10,8 @@ find_package(Qt6 REQUIRED COMPONENTS Quick Multimedia)
 
 qt_add_executable(appAppDashboardAndroid
     main.cpp
+    networkdata.h networkdata.cpp
+    game.h game.cpp
 )
 
 qt_add_qml_module(appAppDashboardAndroid

@@ -22,7 +22,22 @@ Rectangle {
     property int leftAirPosition: 1
     property bool syncOn: false
 
-    function handleTemperatureChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract .5
+    property bool btn1On: false
+    property bool btn2On: false
+    property bool btn3On: false
+    property bool btn4On: false
+    property bool btn5On: false
+    property bool btn6On: false
+    property bool btn7On: false
+    property bool btn8On: false
+
+
+    signal temperatureSwitched(bool pass, double temp)
+    signal airSwitched(bool pass, int air)
+    signal airPositionSwitched(bool pass, int mode)
+    signal btnSwitched(int btn)
+
+    function handleTemperatureChange(side: bool, increase: bool, syncFun = false) { //side: true - right (pass), false - left (driver); increase: true - add .5, false subtract .5
         let change = 0.5
         if(!increase) {
             change = -change
@@ -34,17 +49,15 @@ Rectangle {
                 root.syncOn = false
                 btn7Container.isOn = false
             }
-
             root.rightTemperature += change
-            //rightTempText.text = root.rightTemperature.toFixed(1)
         }
 
         if(!side){
             // left side
-
             root.leftTemperature += change
-            //leftTempText.text = root.leftTemperature.toFixed(1)
         }
+
+        root.temperatureSwitched(!side, side ? root.rightTemperature : root.leftTemperature)
     }
 
     function handleAirChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract 1
@@ -59,15 +72,13 @@ Rectangle {
                 root.syncOn = false
                 btn7Container.isOn = false
             }
-
             root.rightAir += change
-            //rightAirText.text = root.rightAir.toString()
         }
         if(!side){
             // left side
             root.leftAir += change
-            //leftAirText.text = root.leftAir.toString()
         }
+        root.airSwitched(!side, side ? root.rightAir : root.leftAir)
     }
 
     function handleSyncChange(){
@@ -87,13 +98,44 @@ Rectangle {
         }
     }
 
-    // function handleAirPositionChange(side: bool, mode: int){
-    //     if(side){
-    //         root.rightAirPosition = mode
-    //     }else{
-    //         root.leftAirPosition = mode
-    //     }
-    // }
+    function handleAirPositionChange(pass: bool, pos: int){
+        if(pass){
+            root.rightAirPosition = pos
+        }else{
+            root.leftAirPosition = pos
+        }
+        root.airPositionSwitched(!pass, pass ? root.rightAirPosition : root.leftAirPosition)
+    }
+
+    function handleBtnSwitch(btn: int){
+        switch(btn){
+        case 1:
+            root.btn1On = !root.btn1On
+            break
+        case 2:
+            root.btn2On = !root.btn2On
+            break
+        case 3:
+            root.btn3On = !root.btn3On
+            break
+        case 4:
+            root.btn4On = !root.btn4On
+            break
+        case 5:
+            root.btn5On = !root.btn5On
+            break
+        case 6:
+            root.btn6On = !root.btn6On
+            break
+        case 7:
+            root.btn7On = !root.btn7On
+            break
+        case 8:
+            root.btn8On = !root.btn8On
+            break
+        }
+        root.btnSwitched(btn)
+    }
 
 
     Rectangle {
@@ -287,7 +329,7 @@ Rectangle {
                 opacity: root.leftAirPosition === 1 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.leftAirPosition = 1
+                    onClicked: root.handleAirPositionChange(false, 1)
                 }
             }
             Image {
@@ -298,7 +340,7 @@ Rectangle {
                 opacity: root.leftAirPosition === 2 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.leftAirPosition = 2
+                    onClicked: root.handleAirPositionChange(false, 2)
                 }
             }
             Image {
@@ -309,7 +351,7 @@ Rectangle {
                 opacity: root.leftAirPosition === 3 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.leftAirPosition = 3
+                    onClicked: root.handleAirPositionChange(false, 3)
                 }
             }
         }
@@ -515,7 +557,7 @@ Rectangle {
                 opacity: root.rightAirPosition === 1 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.rightAirPosition = 1
+                    onClicked: root.handleAirPositionChange(true , 1)
                 }
             }
             Image {
@@ -527,7 +569,7 @@ Rectangle {
                 opacity: root.rightAirPosition === 2 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.rightAirPosition = 2
+                    onClicked: root.handleAirPositionChange(true, 2)
                 }
             }
             Image {
@@ -539,7 +581,7 @@ Rectangle {
                 opacity: root.rightAirPosition === 3 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.rightAirPosition = 3
+                    onClicked: root.handleAirPositionChange(true, 3)
                 }
             }
         }
@@ -596,7 +638,7 @@ Rectangle {
                     id: light1
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn1Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn1On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -620,7 +662,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn1Container.isOn = !btn1Container.isOn
+                    onClicked: root.handleBtnSwitch(1)
                 }
             }
 
@@ -641,7 +683,7 @@ Rectangle {
                     id: light2
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn2Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn2On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -664,7 +706,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn2Container.isOn = !btn2Container.isOn
+                    onClicked: root.handleBtnSwitch(2)
                 }
             }
 
@@ -685,7 +727,7 @@ Rectangle {
                     id: light3
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn3Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn3On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -713,7 +755,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn3Container.isOn = !btn3Container.isOn
+                    onClicked: root.handleBtnSwitch(3)
                 }
             }
 
@@ -734,7 +776,7 @@ Rectangle {
                     id: light4
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn4Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn4On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -762,7 +804,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn4Container.isOn = !btn4Container.isOn
+                    onClicked: root.handleBtnSwitch(4)
                 }
             }
 
@@ -783,7 +825,7 @@ Rectangle {
                     id: light5
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn5Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn5On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -817,7 +859,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn5Container.isOn = !btn5Container.isOn
+                    onClicked: root.handleBtnSwitch(5)
                 }
             }
 
@@ -838,7 +880,7 @@ Rectangle {
                     id: light6
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn6Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn6On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -872,7 +914,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn6Container.isOn = !btn6Container.isOn
+                    onClicked: root.handleBtnSwitch(6)
                 }
             }
 
@@ -893,7 +935,7 @@ Rectangle {
                     id: light7
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn7Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn7On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -922,7 +964,7 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        btn7Container.isOn = !btn7Container.isOn
+                        root.handleBtnSwitch(7)
                         root.handleSyncChange()
                     }
                 }
@@ -945,7 +987,7 @@ Rectangle {
                     id: light8
                     width: row.lightWidth
                     height: row.lightHeight
-                    color: btn8Container.isOn ? row.lightColorOn : row.lightColorOff
+                    color: root.btn8On ? row.lightColorOn : row.lightColorOff
                     anchors.top: parent.top
                     anchors.topMargin: row.lightTopMargin
                     anchors.horizontalCenter: parent.horizontalCenter
@@ -967,7 +1009,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: btn8Container.isOn = !btn8Container.isOn
+                    onClicked: root.handleBtnSwitch(8)
                 }
             }
         }
