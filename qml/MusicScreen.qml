@@ -74,7 +74,7 @@ Rectangle {
     CustomText {
         id: musicText
         text: "MUSIC"
-        font.pointSize: 30
+        font.pointSize: root.width * 0.02
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: -100
         anchors.horizontalCenter: parent.horizontalCenter
@@ -82,9 +82,9 @@ Rectangle {
 
     Item {
         id: musicContainer
-        width: 2*root.width / 3
-        height: 10
-        y: 2*(root.height)/3 - 6 * height
+        width: 2 * root.width / 3
+        height: root.height * 0.015
+        y: 2 * (root.height)/3 - 6 * height
         anchors.horizontalCenter: parent.horizontalCenter
 
         Slider {
@@ -162,10 +162,10 @@ Rectangle {
 
     Item {
         id: controlsContainer
-        width: 3*80+ 200
+        width: 3 * 80 + 200
         height: 80
         anchors.top: musicContainer.bottom
-        anchors.topMargin: 40
+        anchors.topMargin: root.height * 0.06
         anchors.horizontalCenter: parent.horizontalCenter
 
         Row {
@@ -237,8 +237,8 @@ Rectangle {
 
     Item {
         id: volumeContainer
-        width: 80
-        height: root.height*0.6  + 80
+        width: root.width * 0.045
+        height: root.height * 0.6  + 80
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 50

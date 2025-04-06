@@ -20,7 +20,6 @@ Rectangle {
     property int leftAir: 1
     property int rightAirPosition: 1
     property int leftAirPosition: 1
-    property bool syncOn: false
 
     property bool btn1On: false
     property bool btn2On: false
@@ -37,66 +36,57 @@ Rectangle {
     signal airPositionSwitched(bool pass, int mode)
     signal btnSwitched(int btn)
 
-    function handleTemperatureChange(side: bool, increase: bool, syncFun = false) { //side: true - right (pass), false - left (driver); increase: true - add .5, false subtract .5
+    function handleTemperatureChange(driver: bool, increase: bool, syncFun = false) { //driver: true - driver, false - pass; increase: true - add .5, false subtract .5
         let change = 0.5
         if(!increase) {
             change = -change
         }
 
-        if(side || root.syncOn){
-            // right side
-            if(side && !syncFun){
-                root.syncOn = false
-                btn7Container.isOn = false
-            }
-            root.rightTemperature += change
-        }
-
-        if(!side){
-            // left side
+        if(driver){
             root.leftTemperature += change
         }
-
-        root.temperatureSwitched(!side, side ? root.rightTemperature : root.leftTemperature)
+        if(!driver || root.btn7On){
+            root.rightTemperature += change
+            if(!driver && root.btn7On && !syncFun){
+                root.handleBtnSwitch(7)
+            }
+        }
+        root.temperatureSwitched(driver, driver ? root.leftTemperature : root.rightTemperature)
     }
 
-    function handleAirChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract 1
+    function handleAirChange(driver: bool, increase: bool, syncFun = false) { //increase: true - add 1, false subtract 1
         let change = 1
         if(!increase) {
             change = -change
         }
 
-        if(side || root.syncOn){
-            // right side
-            if(side && !syncFun){
-                root.syncOn = false
-                btn7Container.isOn = false
-            }
-            root.rightAir += change
-        }
-        if(!side){
-            // left side
+        if(driver){
             root.leftAir += change
         }
-        root.airSwitched(!side, side ? root.rightAir : root.leftAir)
-    }
 
-    function handleSyncChange(){
-        root.syncOn = !syncOn
-        if(syncOn){
-            var change = (root.leftTemperature - root.rightTemperature) * 2
-            var n = Math.abs(change)
-            for(var i=0; i<n; i++){
-                root.handleTemperatureChange(true, change>0, true)
-            }
-
-            change = root.leftAir - root.rightAir
-            n = Math.abs(change)
-            for(var i=0; i<n; i++){
-                root.handleAirChange(true, change>0, true)
+        if(!driver || root.btn7On){
+            root.rightAir += change
+            if(!driver && root.btn7On && !syncFun){
+                root.handleBtnSwitch(7)
             }
         }
+        root.airSwitched(driver, driver ? root.leftAir : root.rightAir)
     }
+
+    function handleSyncOn(){
+        var change = (root.leftTemperature - root.rightTemperature) * 2
+        var n = Math.abs(change)
+        for(var i=0; i<n; i++){
+            root.handleTemperatureChange(false, change>0, true)
+        }
+
+        change = root.leftAir - root.rightAir
+        n = Math.abs(change)
+        for(var i=0; i<n; i++){
+            root.handleAirChange(false, change>0, true)
+        }
+    }
+
 
     function handleAirPositionChange(pass: bool, pos: int){
         if(pass){
@@ -129,6 +119,9 @@ Rectangle {
             break
         case 7:
             root.btn7On = !root.btn7On
+            if(root.btn7On){
+                root.handleSyncOn()
+            }
             break
         case 8:
             root.btn8On = !root.btn8On
@@ -193,7 +186,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.handleTemperatureChange(false, true)
+                        onClicked: root.handleTemperatureChange(true, true)
                     }
                 }
 
@@ -216,7 +209,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.handleTemperatureChange(false, false)
+                        onClicked: root.handleTemperatureChange(true, false)
                     }
                 }
             }
@@ -274,7 +267,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirChange(false, true)
+                    onClicked: root.handleAirChange(true, true)
                 }
             }
 
@@ -298,7 +291,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirChange(false, false)
+                    onClicked: root.handleAirChange(true, false)
                 }
             }
         }
@@ -426,7 +419,7 @@ Rectangle {
                 width: root.rectWidth
                 height: root.rectHeight
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: root.rightAir < 5 ? "#30ffffff" : "#10ffffff"
+                color: enabled ? "#30ffffff" : "#10ffffff"
                 border.color: "#ffffff"
                 border.width: width * 0.03125
                 enabled: root.rightAir < 5
@@ -441,7 +434,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirChange(true, true)
+                    onClicked: root.handleAirChange(false, true)
                 }
             }
 
@@ -465,7 +458,7 @@ Rectangle {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirChange(true, false)
+                    onClicked: root.handleAirChange(false, false)
                 }
             }
         }
@@ -500,7 +493,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.handleTemperatureChange(true, true)
+                        onClicked: root.handleTemperatureChange(false, true)
                     }
                 }
 
@@ -523,7 +516,7 @@ Rectangle {
 
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: root.handleTemperatureChange(true, false)
+                        onClicked: root.handleTemperatureChange(false, false)
                     }
                 }
             }
@@ -965,7 +958,7 @@ Rectangle {
                     anchors.fill: parent
                     onClicked: {
                         root.handleBtnSwitch(7)
-                        root.handleSyncChange()
+                        //root.handleSyncChange()
                     }
                 }
             }

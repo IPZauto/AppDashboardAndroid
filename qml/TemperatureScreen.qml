@@ -7,7 +7,7 @@ Item {
     property bool landscape: width > height
 
     property double rightTemperature: 20.0
-    property double leftTemperature: 21.0
+    property double leftTemperature: 20.0
     property int rightAir: 1
     property int leftAir: 1
     property int rightAirPosition: 1
@@ -26,6 +26,7 @@ Item {
         id: componentLoader
         anchors.fill: parent
         source: root.landscape ? Qt.resolvedUrl("LandscapeMain.qml") : Qt.resolvedUrl("PortraitMain.qml")
+        asynchronous: true
         onLoaded: {
             if(componentLoader.item){
                 componentLoader.item.rightTemperature = root.rightTemperature

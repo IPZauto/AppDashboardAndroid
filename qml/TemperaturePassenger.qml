@@ -17,7 +17,6 @@ Rectangle {
     property double temperature: 20.0
     property int air: 1
     property int airPosition: 1
-    property bool syncOn: btn3On
 
     property bool btn1On: false
     property bool btn2On: false
@@ -28,7 +27,6 @@ Rectangle {
     signal passengerTempSwitched(bool passenger, double temp)
     signal passengerAirSwitched(bool passenger, int air)
     signal passengerAirPositionSwitched(bool passenger, int pos)
-    signal syncSwitched()
     signal passengerBtnSwitched(bool passenger, int btn)
 
     function handleTemperatureChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract .5

@@ -92,12 +92,14 @@ Item {
     function handleSyncOn() {
         root.rightTemperature = root.leftTemperature
         root.rightAir = root.leftAir
-        root.rightAirPosition = root.leftAirPosition
+        //root.rightAirPosition = root.leftAirPosition
         if(componentLoader.item){
-            componentLoader.item.temperature = root.driver ? root.leftTemperature : root.rightTemperature
-            componentLoader.item.air = root.driver ? root.leftAir : root.rightAir
-            componentLoader.item.airPosition = root.driver ? root.leftAirPosition : root.rightAirPosition
+            componentLoader.item.temperature = root.leftTemperature
+            componentLoader.item.air = root.leftAir
+            //componentLoader.item.airPosition = root.driver ? root.leftAirPosition : root.rightAirPosition
         }
+        root.temperatureSwitched(false, root.rightTemperature)
+        root.airSwitched(false, root.rightAir)
     }
 
     function handleBtnSwitch(pass: bool, btn: int){
@@ -105,41 +107,33 @@ Item {
             switch(btn){
             case 1:
                 root.btn1On = !root.btn1On
-                //root.btnSwitched(1)
                 break
             case 2:
                 root.btn2On = !root.btn2On
-                //root.btnSwitched(2)
                 break
             case 3:
                 root.btn3On = !root.btn3On
-                //root.btnSwitched(3)
                 break
             case 4:
                 root.btn4On = !root.btn4On
-                //root.btnSwitched(4)
                 break
             }
         }else{
             switch(btn){
             case 1:
                 root.btn5On = !root.btn5On
-                //root.btnSwitched(5)
                 break
             case 2:
                 root.btn6On = !root.btn6On
-                //root.btnSwitched(6)
                 break
             case 3:
                 root.btn7On = !root.btn7On
                 if(root.btn7On){
                     root.handleSyncOn()
                 }
-                //root.btnSwitched(7)
                 break
             case 4:
                 root.btn8On = !root.btn8On
-                //root.btnSwitched(8)
                 break
             }
         }
