@@ -44,6 +44,7 @@ qt_add_resources(appAppDashboardAndroid "resources"
         resources/images/icon_music.png
         resources/images/icon_nav.png
         resources/images/icon_reverse2.png
+        resources/images/icon_ac.png
         resources/images/play_circle_icon.png
         resources/images/pause_circle_icon.png
         resources/images/arrow_back_icon.png

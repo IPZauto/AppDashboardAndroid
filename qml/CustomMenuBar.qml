@@ -84,7 +84,7 @@ Item {
                 height: root.iconSize
                 property int id: 3
                 background: Image {
-                    source: Qt.resolvedUrl("qrc:/resources/images/icon_reverse2.png")
+                    source: Qt.resolvedUrl("qrc:/resources/images/icon_ac.png")
                 }
                 onClicked: root.buttonHandler(reverseButton.id)
             }
