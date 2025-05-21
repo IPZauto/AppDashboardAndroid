@@ -130,7 +130,7 @@ QString Game::date() const {
     int day=realDate.last(2).toInt();
     QDate qdate(year,month,day);
     QString resultDateString=qdate.toString("dd MMMM yyyy");
-    qDebug()<<year<<"\t"<<month<<"\t"<<day;
+    //qDebug()<<year<<"\t"<<month<<"\t"<<day;
     return resultDateString;
 
 }

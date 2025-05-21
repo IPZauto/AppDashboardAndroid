@@ -29,7 +29,7 @@ Item {
         CustomText {
             id: dateTime
             text: root.time
-            font.pointSize: root.isLandscapeLayout ? 26 : 32
+            font.pointSize: root.isLandscapeLayout ? 26 : 23
             anchors.left: parent.left
             anchors.leftMargin: root.cmargin
             anchors.verticalCenter: bar.verticalCenter
@@ -38,7 +38,7 @@ Item {
         CustomText {
             id: dataTitle
             text: root.title
-            font.pointSize: root.isLandscapeLayout ? 26 : 32
+            font.pointSize: root.isLandscapeLayout ? 26 : 23
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.verticalCenter: bar.verticalCenter
         }
@@ -46,7 +46,7 @@ Item {
         CustomText {
             id: dateLong
             text: root.date
-            font.pointSize: root.isLandscapeLayout ? 26 : 32
+            font.pointSize: root.isLandscapeLayout ? 26 : 23
             anchors.right: parent.right
             anchors.rightMargin: root.cmargin
             anchors.verticalCenter: bar.verticalCenter
