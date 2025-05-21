@@ -17,7 +17,7 @@ Window {
     //signal viewSent(int view)
 
 
-    property string serverUrl: ""
+    property string serverUrl: "http://82.145.78.198:25555/api/ets2/telemetry"
 
     Dialog {
         id: serverIdPopUp
@@ -43,10 +43,15 @@ Window {
 
         onAccepted: {
             root.serverUrl = serverUrlInput.text;
-            //network.url = serverUrlInput.text;
+            network.url = serverUrlInput.text;
+            //root.serverUrl = "http://82.145.78.198:25555/api/ets2/telemetry"
+            //network.url = "http://82.145.78.198:25555/api/ets2/telemetry"
+
         }
 
         onRejected: {
+            root.serverUrl = "http://82.145.78.198:25555/api/ets2/telemetry"
+            network.url = "http://82.145.78.198:25555/api/ets2/telemetry"
             console.log("Server Url input cancelled");
         }
     }
@@ -63,7 +68,9 @@ Window {
         anchors.topMargin: 0
         z: 2
         isLandscapeLayout: root.isLandscape
-        //date: backend.date
+        time: backend.time
+        date: backend.date
+
     }
 
     Item {

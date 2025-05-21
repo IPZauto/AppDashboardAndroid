@@ -40,6 +40,9 @@ class Game : public QObject
     Q_PROPERTY(int csSpeed READ csSpeed WRITE setCsSpeed NOTIFY csSpeedChanged FINAL)
     Q_PROPERTY(bool csOn READ csOn WRITE setCsOn NOTIFY csOnChanged FINAL)
     Q_PROPERTY(bool batteryVoltageWarningOn READ batteryVoltageWarningOn WRITE setBatteryVoltageWarningOn NOTIFY batteryVoltageWarningOnChanged FINAL)
+    Q_PROPERTY(QString date READ date WRITE setDate NOTIFY dateChanged FINAL)
+    Q_PROPERTY(QString time READ time WRITE setTime NOTIFY timeChanged FINAL)
+
 
 public:
     explicit Game(QObject *parent = nullptr){
@@ -51,7 +54,10 @@ public:
         GameInfo.placement.roll=0.0;
         GameInfo.connected=false;
         GameInfo.paused=true;
-        GameInfo.date="1 sty 2025 00:00:00";
+        GameInfo.date="1 sty 2025";
+        GameInfo.time="00:00:00";
+        ;
+
         setSpeed(0);
         setRpm(0);
         setMaxRpm(0);
@@ -66,7 +72,9 @@ public:
         setBatteryVoltageWarningOn(false);
         setCsSpeed(0);
         setCsOn(false);
+
     };
+
 
     // settery
     void setPlacement(
@@ -82,6 +90,8 @@ public:
     void setPaused(const bool);
 
     void setDate(const QString);
+    void setTime(const QString);
+
 
     void setSpeed(const int);
 
@@ -116,7 +126,7 @@ public:
     bool conneted() const;
     bool paused() const;
     QString date() const;
-
+    QString time() const;
     int speed() const;
     int rpm() const;
     int maxRpm() const;
@@ -147,6 +157,8 @@ signals:
     void batteryVoltageWarningOnChanged();
     void csSpeedChanged();
     void csOnChanged();
+    void dateChanged();
+    void timeChanged();
 
 private:
     struct GameInfo{
@@ -157,6 +169,8 @@ private:
         bool paused;        // true if game is currently paused, false otherwise
 
         QString date;
+        QString time;
+
 
     }GameInfo;
 

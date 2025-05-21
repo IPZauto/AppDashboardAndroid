@@ -38,7 +38,10 @@ void NetworkData::fetchTelemetryData(){
                     QJsonObject gameObject = rootObject["game"].toObject();
 
                     m_gameData->setConnected(gameObject["connected"].toBool());
+                    QString data = gameObject["time"].toString();
+
                     m_gameData->setDate(gameObject["time"].toString());
+                    m_gameData->setTime(gameObject["time"].toString());
                     m_gameData->setPaused(gameObject["paused"].toBool());
                 }
                 // Extract placement data

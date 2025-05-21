@@ -80,6 +80,8 @@ set_target_properties(appAppDashboardAndroid PROPERTIES
 target_link_libraries(appAppDashboardAndroid
     PRIVATE Qt6::Quick
     PRIVATE Qt6::Multimedia
+   # Qt6::WebEngine
+
 )
 
 include(GNUInstallDirs)

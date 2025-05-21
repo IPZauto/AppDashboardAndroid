@@ -1,6 +1,7 @@
 #include "game.h"
 #include <QString>
-
+#include <QDebug>
+#include <QDate>
 void Game::setPlacement(
     const float x,
     const float y,
@@ -27,8 +28,12 @@ void Game::setPaused(const bool paused){
 
 void Game::setDate(const QString date){
     GameInfo.date=date;
+    emit dateChanged();
 }
-
+void Game::setTime(const QString time){
+    GameInfo.time=time;
+    emit timeChanged();
+}
 void Game::setSpeed(const int speed){
     if (Truck.speed==speed) return;
     Truck.speed=speed;
@@ -117,7 +122,30 @@ bool Game::conneted() const {return this->GameInfo.connected;}
 
 bool Game::paused() const {return this->GameInfo.paused;}
 
-QString Game::date() const {return this->GameInfo.date;}
+QString Game::date() const {
+
+    QString realDate=this->GameInfo.date.first(10);
+    int year=realDate.first(4).toInt()+2024;
+    int month=realDate.mid(5,2).toInt();
+    int day=realDate.last(2).toInt();
+    QDate qdate(year,month,day);
+    QString resultDateString=qdate.toString("dd MMMM yyyy");
+    qDebug()<<year<<"\t"<<month<<"\t"<<day;
+    return resultDateString;
+
+}
+QString Game::time() const {
+
+    QString onlyTime=this->GameInfo.time.mid(11,5);
+
+    QString realDate=this->GameInfo.date.first(10);
+    int year=realDate.first(4).toInt()+2024;
+    int month=realDate.mid(5,2).toInt();
+    int day=realDate.last(2).toInt();
+    QDate qdate(year,month,day);
+    QString abbr=qdate.toString("ddd");
+    return abbr+" "+onlyTime;
+}
 
 int Game::speed() const {return this->Truck.speed;}
 
