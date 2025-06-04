@@ -11,6 +11,8 @@ Rectangle {
     property bool muted: false
     property bool songStoppedManually: false
 
+    property int buttonSize: 80
+
     gradient: Gradient {
         orientation: Gradient.Horizontal
             GradientStop { position: -0.05; color: "#277070" }
@@ -129,7 +131,8 @@ Rectangle {
 
                 implicitWidth: 8
                 implicitHeight: 8
-                color: "#abcbac"
+                color: "transparent"
+
             }
 
             Rectangle {
@@ -142,28 +145,12 @@ Rectangle {
                 radius: 10
             }
         }
-
-
-
     }
-
-    //MediaPlayer position
-    // ProgressBar {
-    //     id: progressBar
-    //     width: 2*root.width/3
-    //     height: 10
-    //     value: musicPlayer.position / musicPlayer.duration
-    //     y: 2*(root.height)/3 - 6 * height
-    //     anchors.horizontalCenter: parent.horizontalCenter
-    //     from: 0
-    //     to: 1
-
-    // }
 
     Item {
         id: controlsContainer
-        width: 3 * 80 + 200
-        height: 80
+        width: 3 * root.buttonSize + 200
+        height: root.buttonSize
         anchors.top: musicContainer.bottom
         anchors.topMargin: root.height * 0.06
         anchors.horizontalCenter: parent.horizontalCenter
@@ -177,8 +164,8 @@ Rectangle {
             Image {
                 id: leftArrow
                 source: Qt.resolvedUrl("qrc:/resources/images/arrow_back_icon.png")
-                width: 80
-                height: 80
+                width: root.buttonSize
+                height: root.buttonSize
                 fillMode: Image.PreserveAspectFit
 
                 MouseArea {
@@ -193,8 +180,8 @@ Rectangle {
 
             PlayStopButton {
                 id: onOffButton
-                width: 80
-                height: 80
+                width: root.buttonSize
+                height: root.buttonSize
                 onClicked: {
                     root.songStoppedManually = true;
                     !musicPlayer.playing ? root.playCurrentSong() : musicPlayer.pause();
@@ -204,8 +191,8 @@ Rectangle {
             Image {
                 id: rightArrow
                 source: Qt.resolvedUrl("qrc:/resources/images/arrow_forward_icon.png")
-                width: 80
-                height: 80
+                width: root.buttonSize
+                height: root.buttonSize
                 fillMode: Image.PreserveAspectFit
 
                 MouseArea {
@@ -238,7 +225,7 @@ Rectangle {
     Item {
         id: volumeContainer
         width: root.width * 0.045
-        height: root.height * 0.6  + 80
+        height: root.height * 0.6  + root.buttonSize
         anchors.verticalCenter: parent.verticalCenter
         anchors.left: parent.left
         anchors.leftMargin: 50

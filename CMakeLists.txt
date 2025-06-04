@@ -28,8 +28,8 @@ qt_add_qml_module(appAppDashboardAndroid
         qml/NavScreen.qml
         qml/ReverseScreen.qml
         qml/PlayStopButton.qml
-        qml/LandscapeMain.qml
-        qml/PortraitMain.qml
+        qml/LandscapeTemperature.qml
+        qml/PortraitTemperature.qml
         qml/Separator.qml
         qml/TemperatureScreen.qml
         qml/TemperatureDriver.qml

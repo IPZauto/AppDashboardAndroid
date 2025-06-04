@@ -10,6 +10,9 @@ Rectangle {
     //property string backgroundColor: "#011226"
     property string backgroundColor: "#000000"
     property string gradientColor: "#393f45"
+    property string buttonEnabledColor: "#30ffffff"
+    property string buttonDisabledColor: "#10ffffff"
+
     property int rectWidth: root.width * 0.05
     property int rectHeight: root.height * 0.25
     property int fanPositionIconSize: root.width * 0.05
@@ -29,6 +32,13 @@ Rectangle {
     property bool btn6On: false
     property bool btn7On: false
     property bool btn8On: false
+
+    property double minAllowedTemperature: 17.0
+    property double maxAllowedTemperature: 30.0
+
+    property int minAllowedBlowPower: 0
+    property int maxAllowedBlowPower: 5
+
 
 
     signal temperatureSwitched(bool pass, double temp)
@@ -82,7 +92,7 @@ Rectangle {
 
         change = root.leftAir - root.rightAir
         n = Math.abs(change)
-        for(var i=0; i<n; i++){
+        for(i=0; i<n; i++){
             root.handleAirChange(false, change>0, true)
         }
     }
@@ -172,10 +182,10 @@ Rectangle {
                     width: root.rectWidth
                     height: root.rectHeight
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color:  root.leftTemperature < 30.0 ? "#30ffffff" : "#10ffffff"
+                    color:  enabled ? buttonEnabledColor : buttonDisabledColor
                     border.color: "#ffffff"
                     border.width: width * 0.03125
-                    enabled: root.leftTemperature < 30.0
+                    enabled: root.leftTemperature < root.maxAllowedTemperature
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/plus_icon.png")
@@ -195,10 +205,10 @@ Rectangle {
                     width: root.rectWidth
                     height: root.rectHeight
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: root.leftTemperature > 17.0 ? "#30ffffff" : "#10ffffff"
+                    color: enabled ? buttonEnabledColor : buttonDisabledColor
                     border.color: "#ffffff"
                     border.width: width * 0.03125
-                    enabled: root.leftTemperature > 17.0
+                    enabled: root.leftTemperature > root.minAllowedTemperature
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/minus_icon.png")
@@ -252,10 +262,10 @@ Rectangle {
                 width: root.rectWidth
                 height: root.rectHeight
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: root.leftAir < 5 ? "#30ffffff" : "#10ffffff"
+                color: enabled ? buttonEnabledColor : buttonDisabledColor
                 border.color: "#ffffff"
                 border.width: width * 0.03125
-                enabled: root.leftAir < 5
+                enabled: root.leftAir < root.maxAllowedBlowPower
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_forward_icon.png")
@@ -276,10 +286,10 @@ Rectangle {
                 width: root.rectWidth
                 height: root.rectHeight
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: root.leftAir > 0 ? "#30ffffff" : "#10ffffff"
+                color: enabled ? buttonEnabledColor : buttonDisabledColor
                 border.color: "#ffffff"
                 border.width: width * 0.03125
-                enabled: root.leftAir > 0
+                enabled: root.leftAir > root.minAllowedBlowPower
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_back_icon.png")
@@ -419,10 +429,10 @@ Rectangle {
                 width: root.rectWidth
                 height: root.rectHeight
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: enabled ? "#30ffffff" : "#10ffffff"
+                color: enabled ? buttonEnabledColor : buttonDisabledColor
                 border.color: "#ffffff"
                 border.width: width * 0.03125
-                enabled: root.rightAir < 5
+                enabled: root.rightAir < root.maxAllowedBlowPower
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_forward_icon.png")
@@ -443,10 +453,10 @@ Rectangle {
                 width: root.rectWidth
                 height: root.rectHeight
                 anchors.horizontalCenter: parent.horizontalCenter
-                color: root.rightAir > 0 ? "#30ffffff" : "#10ffffff"
+                color: enabled ? buttonEnabledColor : buttonDisabledColor
                 border.color: "#ffffff"
                 border.width: width * 0.03125
-                enabled: root.rightAir > 0
+                enabled: root.rightAir > root.minAllowedBlowPower
 
                 Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/arrow_back_icon.png")
@@ -479,10 +489,10 @@ Rectangle {
                     width: root.rectWidth
                     height: root.rectHeight
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: root.rightTemperature < 30.0 ? "#30ffffff" : "#10ffffff"
+                    color: enabled ? buttonEnabledColor : buttonDisabledColor
                     border.color: "#ffffff"
                     border.width: width * 0.03125
-                    enabled: root.rightTemperature < 30.0
+                    enabled: root.rightTemperature < root.maxAllowedTemperature
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/plus_icon.png")
@@ -502,10 +512,10 @@ Rectangle {
                     width: root.rectWidth
                     height: root.rectHeight
                     anchors.horizontalCenter: parent.horizontalCenter
-                    color: root.rightTemperature > 17.0 ? "#30ffffff" : "#10ffffff"
+                    color: enabled ? buttonEnabledColor : buttonDisabledColor
                     border.color: "#ffffff"
                     border.width: width * 0.03125
-                    enabled: root.rightTemperature > 17.0
+                    enabled: root.rightTemperature > root.minAllowedTemperature
 
                     Image {
                         source: Qt.resolvedUrl("qrc:/resources/images/minus_icon.png")
