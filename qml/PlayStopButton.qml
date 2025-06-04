@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
+// Play/Stop button from MusicScreen.qml
 Button {
     id: btn
     width: 100
@@ -14,6 +15,7 @@ Button {
 
     onClicked: handleButton()
 
+    // Changes button icon when the button is clicked (onClicked signal)
     function handleButton(){
         btn.playing = !btn.playing;
         if(btn.playing){

@@ -1,5 +1,6 @@
 import QtQuick
 
+// Not implemented
 Rectangle {
     id: root
     width: 1920

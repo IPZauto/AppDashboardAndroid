@@ -4,15 +4,17 @@ Item {
     id: root
     height: menubar.height + line.height
 
-    signal viewSwitched(int view)
-    signal fullScreenChaned(bool fullScreenOn)
+    signal viewSwitched(int view)                           // Signal sent to Main.qml, informs to switch view (showed screen)
+    signal fullScreenChaned(bool fullScreenOn)              // Signal sent to Main.qml, informs to toggle fullscreen
     property bool isLandscapeLayout: true
     property int iconSize: isLandscapeLayout ? 120 : 150
 
+    // Function that handles button click action, sends the viewSwitched signal
     function buttonHandler(id){
         root.viewSwitched(id)
     }
 
+    // Decorative line above the menu bar
     Rectangle {
         id: line
         color: "#ffffff"
@@ -21,6 +23,7 @@ Item {
         height: 2
     }
 
+    // Menu bar with 4 buttons
     Item {
         id: menubar
         width: root.width
@@ -35,6 +38,7 @@ Item {
             height: menubar.height
             anchors.centerIn: parent
 
+            // Button switching to NavScreen.qml
             MenuButton {
                 id: navButton
                 anchors.verticalCenter: parent.verticalCenter
@@ -47,6 +51,8 @@ Item {
                 onClicked: root.buttonHandler(navButton.id)
             }
 
+            // Button swiching to GlobeScreen.qml (functionality commented out)
+            // Because the target functionality is not implemented, button acts as a fullscreen toggle button
             MenuButton {
                 id: globeButton
                 anchors.verticalCenter: parent.verticalCenter
@@ -65,6 +71,7 @@ Item {
                 }
             }
 
+            // Button switching to MusicScreen.qml
             MenuButton {
                 id: musicButton
                 anchors.verticalCenter: parent.verticalCenter
@@ -77,8 +84,9 @@ Item {
                 onClicked: root.buttonHandler(musicButton.id)
             }
 
+            // Button switching to TemperatureScreen.qml
             MenuButton {
-                id: reverseButton
+                id: temperatureButton
                 anchors.verticalCenter: parent.verticalCenter
                 width: root.iconSize
                 height: root.iconSize
@@ -86,7 +94,7 @@ Item {
                 background: Image {
                     source: Qt.resolvedUrl("qrc:/resources/images/icon_ac.png")
                 }
-                onClicked: root.buttonHandler(reverseButton.id)
+                onClicked: root.buttonHandler(temperatureButton.id)
             }
         }
     }
