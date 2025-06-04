@@ -1,14 +1,14 @@
 import QtQuick
 
+// TopBar component: displays time, date, and current view title
 Item {
     id: root
     height: bar.height + line.height
-    property int cmargin: 40
-    property string title: "Nav"
-    property bool isLandscapeLayout: true
-    property string date: ""
-    property string time: ""
-    property string dayAbbr: ""
+    property int cmargin: 40                // Content margin from left/right
+    property string title: "Nav"            // Title of the screen
+    property bool isLandscapeLayout: true   // Layout mode flag
+    property string date: ""                // Current date passed from Main.qml (e.g., "10 February 2024")
+    property string time: ""                // Current abbreviated day of week and time, passed from Main.qml (e.g., "Sun 12:38")
 
     Item {
         id: bar
@@ -17,15 +17,7 @@ Item {
         anchors.top: root.top
         anchors.topMargin: 0
 
-        // CustomText {
-        //     id: dateDay
-        //     text: root.dayAbbr
-        //     font.pointSize: root.isLandscapeLayout ? 26 : 32
-        //     anchors.left: parent.left
-        //     anchors.leftMargin: root.cmargin
-        //     anchors.verticalCenter: bar.verticalCenter
-        // }
-
+        // Shows time property from root item (on left side of the topbar)
         CustomText {
             id: dateTime
             text: root.time
@@ -35,6 +27,7 @@ Item {
             anchors.verticalCenter: bar.verticalCenter
         }
 
+        // Shows title of the screen (in the center of the topbar)
         CustomText {
             id: dataTitle
             text: root.title
@@ -43,6 +36,7 @@ Item {
             anchors.verticalCenter: bar.verticalCenter
         }
 
+        // Shows date property from root item (on right side of the topbar)
         CustomText {
             id: dateLong
             text: root.date
@@ -53,6 +47,7 @@ Item {
         }
     }
 
+    // Decorative line below the bar
     Rectangle {
         id: line
         color: "#ffffff"

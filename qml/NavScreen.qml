@@ -6,19 +6,10 @@ Rectangle {
 
     CustomText {
         id: test
-        text: backend ? backend.dateString() : "Brak danych"
+        text: "Nav"
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
 
     }
-
-
-    // WebEngineView {
-    //     id: webView
-    //     anchors.fill: parent
-    //     url: "https://www.example.com"
-    // }
-
-
 
 }

@@ -1,6 +1,7 @@
 import QtQuick
 
-
+// Root temperature screen file, displays LandscapeTemperature.qml or PortraitTemperature.qml based on window size
+// Passes data between temperature files (functions below)
 Item {
     id: root
 
@@ -22,6 +23,7 @@ Item {
     property bool btn7On: false
     property bool btn8On: false
 
+    // Loads chosen file and sets properties values
     Loader {
         id: componentLoader
         anchors.fill: parent

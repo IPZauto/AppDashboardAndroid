@@ -1,5 +1,6 @@
 import QtQuick
 
+// Decorative line between buttons in the Temperature Screens (LandscapeTemperature.qml, TemperatureDriver.qml and TempraturePassenger.qml)
 Rectangle {
     color: "#ffffff"
 

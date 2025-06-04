@@ -9,10 +9,11 @@ Rectangle {
     property int currentSongId: 0
     property double volume: 0.1
     property bool muted: false
-    property bool songStoppedManually: false
+    property bool songStoppedManually: false        // Property to manage auto-play function
 
     property int buttonSize: 80
 
+    // Background gradient
     gradient: Gradient {
         orientation: Gradient.Horizontal
             GradientStop { position: -0.05; color: "#277070" }
@@ -21,12 +22,16 @@ Rectangle {
             GradientStop { position: 1.05; color: "#277070" }
     }
 
+    // Media player Qt element that handles audio output and auto-advance logic
+    // onPlayingChanged -> plays next song when the current ended
     MediaPlayer {
         id: musicPlayer
         audioOutput: AudioOutput {id: audioOutput}
         onPlayingChanged: root.playNextSongWhenSongEnded()
     }
 
+    // List of songs used by MediaPlayer
+    // Name of the song contains "_" symbol where "space" is needed because of config files specification
     ListModel {
         id: playlistModel
         ListElement {url: "qrc:/resources/sounds/Harry_Styles_-_Daylight.mp3"}
@@ -34,6 +39,8 @@ Rectangle {
         ListElement {url: "qrc:/resources/sounds/Hozier_-_Too_Sweet.mp3"}
     }
 
+    // Function that plays current song defined by currentSongId
+    // Starts the song, displays song title from the playlistModel (changes all "_" to " ")
     function playCurrentSong(){
 
         if(root.currentSongId>=0 && root.currentSongId<playlistModel.count){
@@ -47,6 +54,7 @@ Rectangle {
         onOffButton.handleButton();
     }
 
+    // Function implenenting the logic to play next song
     function playNextSong(){
         musicPlayer.stop();
         root.songStoppedManually= true;
@@ -55,6 +63,7 @@ Rectangle {
 
     }
 
+    // Function implenenting the logic to play previous song
     function playPreviousSong(){
         musicPlayer.stop();
         root.songStoppedManually= true;
@@ -63,16 +72,20 @@ Rectangle {
     }
 
 
+    // Logic for auto-play function
+    // If song ended on its own (!songStoppedMaunally) then plays next song
     function playNextSongWhenSongEnded(){
         if(!root.songStoppedManually){
             root.playNextSong();
         }
         else{
-            root.songStoppedManually=false;
+            root.songStoppedManually = false;
         }
 
     }
 
+    // Text in the center of the screen
+    // Displays title of the played song
     CustomText {
         id: musicText
         text: "MUSIC"
@@ -89,26 +102,25 @@ Rectangle {
         y: 2 * (root.height)/3 - 6 * height
         anchors.horizontalCenter: parent.horizontalCenter
 
+        // Shows song progress
+        // onMoved signal informs MediaPlayer element of the change
         Slider {
             id: musicSlider
             height: musicContainer.height
             width: musicContainer.width * 0.9
-            value: musicPlayer.position / musicPlayer.duration
+            value: musicPlayer.position / musicPlayer.duration  // Sets value based on the song duration
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
             anchors.horizontalCenter: parent.horizontalCenter
             from: 0
             to: 1
-            //stepSize: 0.01
             live: true
-            //snapMode: Slider.SnapOnRelease
 
             onMoved: {
-
                 musicPlayer.setPosition(musicSlider.value * musicPlayer.duration)
-
             }
 
+            // Backgrund rectangle
             background: Rectangle {
                 id: musicBackgroundRec
                 y: musicSlider.topPadding + musicSlider.availableHeight / 2 - height / 2
@@ -123,18 +135,19 @@ Rectangle {
                 anchors.horizontalCenterOffset: -5
             }
 
+            // Slider handle currently invisible
             handle: Rectangle {
                 x: musicSlider.visualPosition * (musicSlider.width - width)
                 y: musicSlider.topPadding + musicSlider.availableHeight / 2 - height / 2
                 width: 20
                 height: 20
-
                 implicitWidth: 8
                 implicitHeight: 8
                 color: "transparent"
 
             }
 
+            // Rectangle showing progress (changes dynamically)
             Rectangle {
                 id: musicFill
                 width: musicSlider.visualPosition * musicBackgroundRec.width
@@ -147,6 +160,7 @@ Rectangle {
         }
     }
 
+    // Controls for switching the song and play/stop button
     Item {
         id: controlsContainer
         width: 3 * root.buttonSize + 200
@@ -161,6 +175,9 @@ Rectangle {
             height: controlsContainer.height
             anchors.centerIn: parent
 
+            // Previous song button
+            // Sets the songStoppedManualy property to true
+            // Stops the current song and switches to the previous one in the playlistModel
             Image {
                 id: leftArrow
                 source: Qt.resolvedUrl("qrc:/resources/images/arrow_back_icon.png")
@@ -178,6 +195,7 @@ Rectangle {
                 }
             }
 
+            // Play/Stop button
             PlayStopButton {
                 id: onOffButton
                 width: root.buttonSize
@@ -188,6 +206,9 @@ Rectangle {
                 }
             }
 
+            // Next song button
+            // Sets the songStoppedManualy property to true
+            // Stops the current song and switches to the next one in the playlistModel
             Image {
                 id: rightArrow
                 source: Qt.resolvedUrl("qrc:/resources/images/arrow_forward_icon.png")
@@ -208,12 +229,16 @@ Rectangle {
         }
     }
 
-    function checkMuted() {
+
+    // Changes the muted property
+    function changeMuted() {
         root.muted = !root.muted;
     }
 
-    function manageSound(){
-        checkMuted();
+    // Mutes and unmutes sound by changing musicPlayer (MediaPlayer) property
+    // Changes displayed icon
+    function muteSound(){
+        changeMuted();
         if(root.muted){
             soundIcon.source = Qt.resolvedUrl("qrc:/resources/images/sound_icon_internet33.png");
         }else{
@@ -222,6 +247,7 @@ Rectangle {
         musicPlayer.audioOutput.muted = root.muted;
     }
 
+    // Volume slider and mute button
     Item {
         id: volumeContainer
         width: root.width * 0.045
@@ -231,6 +257,8 @@ Rectangle {
         anchors.leftMargin: 50
         anchors.verticalCenterOffset: -20
 
+        // Volume slider
+        // onMoved property changes the volume value
         Slider {
             id: volumeSlider
             height: root.height*0.52
@@ -241,19 +269,17 @@ Rectangle {
             anchors.horizontalCenter: parent.horizontalCenter
             from: 0
             to: 1
-            //stepSize: 0.01
             live: true
             orientation: Qt.Vertical
-            //snapMode: Slider.SnapOnRelease
 
             onMoved: {
                 root.volume = volumeSlider.value;
                 audioOutput.volume = root.volume;
             }
 
+            // Static background
             background: Rectangle {
                 id: volumeBackgroundRec
-                //x: slider.leftPadding
                 y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
                 width: volumeSlider.width*0.15
                 height: volumeSlider.height
@@ -266,6 +292,7 @@ Rectangle {
                 anchors.horizontalCenterOffset: -5
             }
 
+            // Slider handle
             handle: Rectangle {
                 x: volumeSlider.leftPadding + volumeSlider.visualPosition * (volumeSlider.availableWidth - width)
                 y: volumeSlider.topPadding + volumeSlider.availableHeight / 2 - height / 2
@@ -274,10 +301,10 @@ Rectangle {
                 color: "transparent"
             }
 
+            // Dynamic fill of the slider depending on current volume
             Rectangle {
                 id: fill
                 height: (1 - volumeSlider.visualPosition) * volumeBackgroundRec.height
-                //height: backgroundRec.height
                 x: volumeBackgroundRec.x + volumeBackgroundRec.width*0.1
                 y: volumeBackgroundRec.y + volumeBackgroundRec.height
                 width: volumeBackgroundRec.width * 0.8
@@ -287,6 +314,7 @@ Rectangle {
             }
         }
 
+        // Mute button
         Image {
             id: soundIcon
             width: 50
@@ -299,7 +327,7 @@ Rectangle {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: root.manageSound();
+                onClicked: root.muteSound();
             }
         }
     }
