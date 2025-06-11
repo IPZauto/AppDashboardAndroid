@@ -1,5 +1,7 @@
 import QtQuick
 
+// Portrait temperature screen - controls which (driver/passenger) screen is being shown
+// Functions for passing data and SYNC button logic
 Item {
     id: root
 
@@ -12,6 +14,7 @@ Item {
     property int rightAirPosition: 1
     property int leftAirPosition: 1
 
+    // Bottom temperature menu bar buttons
     property bool btn1On: false
     property bool btn2On: false
     property bool btn3On: false
@@ -92,11 +95,9 @@ Item {
     function handleSyncOn() {
         root.rightTemperature = root.leftTemperature
         root.rightAir = root.leftAir
-        //root.rightAirPosition = root.leftAirPosition
         if(componentLoader.item){
             componentLoader.item.temperature = root.leftTemperature
             componentLoader.item.air = root.leftAir
-            //componentLoader.item.airPosition = root.driver ? root.leftAirPosition : root.rightAirPosition
         }
         root.temperatureSwitched(false, root.rightTemperature)
         root.airSwitched(false, root.rightAir)
