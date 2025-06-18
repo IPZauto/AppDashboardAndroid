@@ -7,7 +7,6 @@ Rectangle {
     color: backgroundColor
 
     property int separatorWidth: 7
-    //property string backgroundColor: "#011226"
     property string backgroundColor: "#000000"
     property string gradientColor: "#393f45"
     property int rectWidth: root.width * 0.1
@@ -19,6 +18,7 @@ Rectangle {
     property int airPosition: 1
     property bool syncOn: false
 
+    // SYNC, ... buttons, on the bottom of the screen on the driver's side
     property bool btn1On: false
     property bool btn2On: false
     property bool btn3On: false
@@ -32,18 +32,18 @@ Rectangle {
 
     signal syncSwitched()
 
-
-    function handleTemperatureChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract .5
+    //side: true - right, false - left; increase: true - add .5, false subtract .5
+    function handleTemperatureChange(side: bool, increase: bool, syncFun = false) {
         let change = 0.5
         if(!increase) {
             change = -change
         }
-
         root.temperature += change
         root.passengerTempSwitched(true, root.temperature)
     }
 
-    function handleAirChange(side: bool, increase: bool, syncFun = false) { //side: true - right, false - left; increase: true - add .5, false subtract 1
+    //side: true - right, false - left; increase: true - add .5, false subtract 1
+    function handleAirChange(side: bool, increase: bool, syncFun = false) {
         let change = 1
         if(!increase) {
             change = -change
@@ -55,6 +55,8 @@ Rectangle {
         }
     }
 
+    // (3 options: 1 - low,  2 - low & mid,  3 - mid)
+    // only one active at the time
     function handleAirPositionChange(mode: int){
         root.airPosition = mode
         root.passengerAirPositionSwitched(true, mode)
@@ -101,6 +103,7 @@ Rectangle {
             anchors.left: airColumn.right
             anchors.leftMargin: root.width * 0.04
 
+            // Colorful bar (for visual purpose)
             Rectangle {
                 width: root.rectWidth * 0.25
                 height: root.rectHeight * 2 + leftTempColumn.spacing
@@ -114,10 +117,12 @@ Rectangle {
             }
 
 
+            // Controls for temperature
             Column {
                 id: leftTempColumn
                 spacing: root.height * 0.014
 
+                // Increase temperature
                 Rectangle {
                     id: rect2TempLeft
                     width: root.rectWidth
@@ -141,6 +146,7 @@ Rectangle {
                     }
                 }
 
+                // Decrease temperature
                 Rectangle {
                     id: rect1TempLeft
                     width: root.rectWidth
@@ -166,7 +172,7 @@ Rectangle {
             }
         }
 
-
+        // Controls for airflow (power)
         Row {
             id: rowAirLeft
             height: root.rectHeight * 0.5
@@ -183,6 +189,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
+            // Shows current airflow power
             CustomText {
                 id: airText
                 text: root.air.toString()
@@ -198,6 +205,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: root.width * 0.04
 
+            // Increase airflow
             Rectangle {
                 id: rect2AirLeft
                 width: root.rectWidth
@@ -222,6 +230,7 @@ Rectangle {
                 }
             }
 
+            // Decrease airflow
             Rectangle {
                 id: rect1AirLeft
                 width: root.rectWidth
@@ -247,7 +256,7 @@ Rectangle {
             }
         }
 
-
+        // Shows current temperature setting
         CustomText {
             id: leftTempText
             text: root.temperature.toFixed(1)
@@ -257,7 +266,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-
+        // Controls for airflow position
         Row {
             anchors.right: switchToRightPassenger.left
             anchors.rightMargin: (root.width - 2 * root.rectWidth - 3 * root.width * 0.04 - root.rectWidth * 0.25 - width - switchToRightPassenger.width) * 0.5
@@ -265,6 +274,7 @@ Rectangle {
             anchors.top: leftTempText.bottom
             anchors.topMargin: (root.height - leftTempText.y - leftTempText.height - tempMenuBar.height - height) * 0.7
 
+            // Low
             Image {
                 id: fan1Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_left_icon.png")
@@ -276,6 +286,8 @@ Rectangle {
                     onClicked: root.handleAirPositionChange(1)
                 }
             }
+
+            // Low & mid
             Image {
                 id: fan2Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_mid_left_icon.png")
@@ -287,6 +299,8 @@ Rectangle {
                     onClicked: root.handleAirPositionChange(2)
                 }
             }
+
+            // Mid
             Image {
                 id: fan3Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_mid_left_icon.png")
@@ -300,6 +314,7 @@ Rectangle {
             }
         }
 
+        // Button to switch to passenger temperature screen
         Image {
             id: switchToRightPassenger
             anchors.right: parent.right
@@ -317,6 +332,8 @@ Rectangle {
     }
 
 
+    // Bottom menu bar with SYNC, ..
+    // Each button has it's own "light" indicating if button is on/off
     Item {
         id: tempMenuBar
         width: root.width
@@ -345,12 +362,12 @@ Rectangle {
             property int lightHeight: root.height * 0.0093
             property double lightWidth: btnWidth - root.width * 0.015
             property int lightTopMargin: root.width * 0.005
-            property string lightColorOn: "#e6a340" //on?
-            //property string lightColor: "#b2c4d9"
-            property string lightColorOff: "#5c646b" //off
+            property string lightColorOn: "#e6a340"         //on
+            property string lightColorOff: "#5c646b"        //off
             property int buttonHeight: root.height * 0.12
             property int imageSize: root.height * 0.09
 
+            // Left seat (driver) heating
             Item{
                 id: btn1Container
                 width: row.btnWidth
@@ -389,7 +406,6 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        //btn1Container.isOn = !btn1Container.isOn
                         root.handleBtnChange(1)
                     }
                 }
@@ -401,6 +417,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // Steering wheel heating
             Item {
                 id: btn2Container
                 width: row.btnWidth
@@ -436,7 +453,6 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        //btn2Container.isOn = !btn2Container.isOn
                         root.handleBtnChange(2)
                     }
                 }
@@ -448,6 +464,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // AUTO (not implemented)
             Item {
                 id: btn3Container
                 width: row.btnWidth
@@ -488,7 +505,6 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        //btn3Container.isOn = !btn3Container.isOn
                         root.handleBtnChange(3)
                     }
                 }
@@ -500,6 +516,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // A/C
             Item {
                 id: btn4Container
                 width: row.btnWidth
@@ -540,7 +557,6 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        //btn4Container.isOn = !btn4Container.isOn
                         root.handleBtnChange(4)
                     }
                 }

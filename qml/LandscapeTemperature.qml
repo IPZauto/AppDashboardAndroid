@@ -7,11 +7,10 @@ Rectangle {
     color: backgroundColor
 
     property int separatorWidth: 7
-    //property string backgroundColor: "#011226"
     property string backgroundColor: "#000000"
     property string gradientColor: "#393f45"
-    property string buttonEnabledColor: "#30ffffff"
-    property string buttonDisabledColor: "#10ffffff"
+    property string buttonEnabledColor: "#30ffffff"     // buttons to change temperature and airflow
+    property string buttonDisabledColor: "#10ffffff"    // buttons to change temperature and airflow
 
     property int rectWidth: root.width * 0.05
     property int rectHeight: root.height * 0.25
@@ -24,6 +23,7 @@ Rectangle {
     property int rightAirPosition: 1
     property int leftAirPosition: 1
 
+    // SYNC, ... buttons, on the bottom of the screen
     property bool btn1On: false
     property bool btn2On: false
     property bool btn3On: false
@@ -33,6 +33,7 @@ Rectangle {
     property bool btn7On: false
     property bool btn8On: false
 
+    // minimun i maximum values allowed
     property double minAllowedTemperature: 17.0
     property double maxAllowedTemperature: 30.0
 
@@ -40,13 +41,14 @@ Rectangle {
     property int maxAllowedBlowPower: 5
 
 
-
+    // signals to pass data to other temperature files
     signal temperatureSwitched(bool pass, double temp)
     signal airSwitched(bool pass, int air)
     signal airPositionSwitched(bool pass, int mode)
     signal btnSwitched(int btn)
 
-    function handleTemperatureChange(driver: bool, increase: bool, syncFun = false) { //driver: true - driver, false - pass; increase: true - add .5, false subtract .5
+    //driver: true - driver, false - passenger; increase: true - add .5, false subtract .5
+    function handleTemperatureChange(driver: bool, increase: bool, syncFun = false) {
         let change = 0.5
         if(!increase) {
             change = -change
@@ -64,7 +66,8 @@ Rectangle {
         root.temperatureSwitched(driver, driver ? root.leftTemperature : root.rightTemperature)
     }
 
-    function handleAirChange(driver: bool, increase: bool, syncFun = false) { //increase: true - add 1, false subtract 1
+    // driver: true - driver, false - passenger; increase: true - add 1, false subtract 1
+    function handleAirChange(driver: bool, increase: bool, syncFun = false) {
         let change = 1
         if(!increase) {
             change = -change
@@ -97,16 +100,19 @@ Rectangle {
         }
     }
 
-
-    function handleAirPositionChange(pass: bool, pos: int){
-        if(pass){
+    // driver: true - driver, false - passenger; pos - position of airflow
+    // (3 options: 1 - low,  2 - low & mid,  3 - mid)
+    // only one active at the time
+    function handleAirPositionChange(driver: bool, pos: int){
+        if(!driver){
             root.rightAirPosition = pos
         }else{
             root.leftAirPosition = pos
         }
-        root.airPositionSwitched(!pass, pass ? root.rightAirPosition : root.leftAirPosition)
+        root.airPositionSwitched(driver, !driver ? root.rightAirPosition : root.leftAirPosition)
     }
 
+    // SYNC,... buttons at the bottom of the screen
     function handleBtnSwitch(btn: int){
         switch(btn){
         case 1:
@@ -140,7 +146,7 @@ Rectangle {
         root.btnSwitched(btn)
     }
 
-
+    // Drivers controls
     Rectangle {
         id: leftPassenger
         height: root.height - tempMenuBar.height
@@ -154,12 +160,14 @@ Rectangle {
             GradientStop { position: 1.1; color: root.gradientColor }
         }
 
+        // Controls for temperature
         Row {
             id: leftTempRow
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: leftAirColumn.right
             anchors.leftMargin: root.width * 0.04
 
+            // Colorful bar (for visual purpose)
             Rectangle {
                 width: root.rectWidth * 0.25
                 height: root.rectHeight * 2 + leftTempColumn.spacing
@@ -177,6 +185,7 @@ Rectangle {
                 id: leftTempColumn
                 spacing: root.height * 0.014
 
+                // Increase temperature
                 Rectangle {
                     id: rect2TempLeft
                     width: root.rectWidth
@@ -200,6 +209,7 @@ Rectangle {
                     }
                 }
 
+                // Decrease temperature
                 Rectangle {
                     id: rect1TempLeft
                     width: root.rectWidth
@@ -226,6 +236,7 @@ Rectangle {
         }
 
 
+        // Controls for airflow (power)
         Row {
             id: rowAirLeft
             height: root.rectHeight * 0.5
@@ -242,6 +253,7 @@ Rectangle {
                 anchors.verticalCenter: parent.verticalCenter
             }
 
+            // Shows current driver airflow power
             CustomText {
                 id: leftAirText
                 text: root.leftAir.toString()
@@ -250,6 +262,7 @@ Rectangle {
             }
         }
 
+        // Actual buttons (functionality)
         Column {
             id: leftAirColumn
             anchors.verticalCenter: parent.verticalCenter
@@ -257,6 +270,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.leftMargin: root.width * 0.04
 
+            // Increase airflow
             Rectangle {
                 id: rect2AirLeft
                 width: root.rectWidth
@@ -281,6 +295,7 @@ Rectangle {
                 }
             }
 
+            // Decrease airflow
             Rectangle {
                 id: rect1AirLeft
                 width: root.rectWidth
@@ -306,7 +321,7 @@ Rectangle {
             }
         }
 
-
+        // Shows current temperature setting
         CustomText {
             id: leftTempText
             text: root.leftTemperature.toFixed(1)
@@ -316,7 +331,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
         }
 
-
+        // Controls for airflow position
         Row {
             anchors.right: parent.right
             anchors.rightMargin: (root.width * 0.5 - 2 * root.rectWidth - 2 * root.width * 0.04 - root.rectWidth * 0.25 - width) * 0.5
@@ -324,6 +339,7 @@ Rectangle {
             anchors.top: leftTempText.bottom
             anchors.topMargin: (root.height - leftTempText.y - leftTempText.height - tempMenuBar.height - height) * 0.7
 
+            // Low
             Image {
                 id: fan1Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_left_icon.png")
@@ -332,9 +348,11 @@ Rectangle {
                 opacity: root.leftAirPosition === 1 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirPositionChange(false, 1)
+                    onClicked: root.handleAirPositionChange(true, 1)
                 }
             }
+
+            // Low & mid
             Image {
                 id: fan2Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_mid_left_icon.png")
@@ -343,9 +361,11 @@ Rectangle {
                 opacity: root.leftAirPosition === 2 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirPositionChange(false, 2)
+                    onClicked: root.handleAirPositionChange(true, 2)
                 }
             }
+
+            // Mid
             Image {
                 id: fan3Left
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_mid_left_icon.png")
@@ -354,7 +374,7 @@ Rectangle {
                 opacity: root.leftAirPosition === 3 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirPositionChange(false, 3)
+                    onClicked: root.handleAirPositionChange(true, 3)
                 }
             }
         }
@@ -365,7 +385,7 @@ Rectangle {
 
 
 
-
+    // Passenger screen
     Rectangle {
         id: rightPassenger
         height: root.height - tempMenuBar.height
@@ -388,6 +408,7 @@ Rectangle {
             anchors.bottomMargin: root.height * 0.037
             anchors.right: rightTempText.right
 
+            // Shows current driver airflow power
             CustomText {
                 id: rightAirText
                 text: root.rightAir.toString()
@@ -405,6 +426,7 @@ Rectangle {
             }
         }
 
+        // Shows passenger's current temperature setting
         CustomText {
             id: rightTempText
             text: root.rightTemperature.toFixed(1)
@@ -415,7 +437,7 @@ Rectangle {
         }
 
 
-
+        // Controls for airflow (power)
         Column {
             id: rightAirColumn
             anchors.verticalCenter: parent.verticalCenter
@@ -424,6 +446,7 @@ Rectangle {
             anchors.verticalCenterOffset: 0
             spacing: root.height * 0.014
 
+            // Increase power of airflow
             Rectangle {
                 id: rect2AirRight
                 width: root.rectWidth
@@ -448,6 +471,7 @@ Rectangle {
                 }
             }
 
+            // Decrease power of airflow
             Rectangle {
                 id: rect1AirRight
                 width: root.rectWidth
@@ -473,6 +497,7 @@ Rectangle {
             }
         }
 
+        // Temperature setting
         Row {
             id: rightTempRow
             anchors.right: rightAirColumn.left
@@ -484,6 +509,7 @@ Rectangle {
                 id: rightTempColumn
                 spacing: root.height * 0.014
 
+                // Increase temperature
                 Rectangle {
                     id: rect2TempRight
                     width: root.rectWidth
@@ -507,6 +533,7 @@ Rectangle {
                     }
                 }
 
+                // Decrease temperature
                 Rectangle {
                     id: rect1TempRight
                     width: root.rectWidth
@@ -531,6 +558,7 @@ Rectangle {
                 }
             }
 
+            // Colorful bar (for visual purpose)
             Rectangle {
                 width: root.rectWidth * 0.25
                 height: root.rectHeight * 2 + rightTempColumn.spacing
@@ -544,6 +572,7 @@ Rectangle {
             }
         }
 
+        // Airflow position setting for passenger
         Row {
             anchors.left: parent.left
             spacing: root.width * 0.026
@@ -551,6 +580,7 @@ Rectangle {
             anchors.topMargin: (root.height - rightTempText.y - rightTempText.height - tempMenuBar.height - height) * 0.7
             anchors.leftMargin: (root.width * 0.5 - 2 * root.rectWidth - 2 * root.width * 0.04 - root.rectWidth * 0.25 - width) * 0.5
 
+            // Low
             Image {
                 id: fan1Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_left_icon.png")
@@ -560,9 +590,11 @@ Rectangle {
                 opacity: root.rightAirPosition === 1 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirPositionChange(true , 1)
+                    onClicked: root.handleAirPositionChange(false , 1)
                 }
             }
+
+            // Low & mid
             Image {
                 id: fan2Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_mid_left_icon.png")
@@ -572,9 +604,10 @@ Rectangle {
                 opacity: root.rightAirPosition === 2 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirPositionChange(true, 2)
+                    onClicked: root.handleAirPositionChange(false, 2)
                 }
             }
+            // Mid
             Image {
                 id: fan3Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_mid_left_icon.png")
@@ -584,7 +617,7 @@ Rectangle {
                 opacity: root.rightAirPosition === 3 ? 1.0 : 0.5
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.handleAirPositionChange(true, 3)
+                    onClicked: root.handleAirPositionChange(false, 3)
                 }
             }
         }
@@ -593,7 +626,8 @@ Rectangle {
 
 
 
-
+    // Bottom menu bar with SYNC, ..
+    // Each button has it's own "light" indicating if button is on/off
     Item {
         id: tempMenuBar
         width: root.width
@@ -622,12 +656,12 @@ Rectangle {
             property int lightHeight: root.height * 0.0093
             property double lightWidth: btnWidth - root.width * 0.015
             property int lightTopMargin: root.width * 0.005
-            property string lightColorOn: "#e6a340" //on?
-            //property string lightColor: "#b2c4d9"
-            property string lightColorOff: "#5c646b" //off
+            property string lightColorOn: "#e6a340"             //on
+            property string lightColorOff: "#5c646b"            //off
             property int buttonHeight: root.height * 0.12
             property int imageSize: root.height * 0.09
 
+            // Left seat (driver) heating
             Item{
                 id: btn1Container
                 width: row.btnWidth
@@ -675,6 +709,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // Steering wheel heating
             Item {
                 id: btn2Container
                 width: row.btnWidth
@@ -719,6 +754,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // AUTO (not implemented)
             Item {
                 id: btn3Container
                 width: row.btnWidth
@@ -768,6 +804,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // A/C
             Item {
                 id: btn4Container
                 width: row.btnWidth
@@ -817,6 +854,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // Defrost front windshield
             Item {
                 id: btn5Container
                 width: row.btnWidth
@@ -872,6 +910,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // Defrost rear windshield
             Item {
                 id: btn6Container
                 width: row.btnWidth
@@ -927,6 +966,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // SYNC
             Item {
                 id: btn7Container
                 width: row.btnWidth
@@ -979,6 +1019,7 @@ Rectangle {
                 width: root.separatorWidth
             }
 
+            // Right seat (passenger) heating
             Item {
                 id: btn8Container
                 width: row.btnWidth

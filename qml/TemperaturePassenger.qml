@@ -7,7 +7,6 @@ Rectangle {
     color: backgroundColor
 
     property int separatorWidth: 7
-    //property string backgroundColor: "#011226"
     property string backgroundColor: "#000000"
     property string gradientColor: "#393f45"
     property int rectWidth: root.width * 0.1
@@ -18,6 +17,7 @@ Rectangle {
     property int air: 1
     property int airPosition: 1
 
+    // SYNC, ... buttons, on the bottom of the screen for the passenger side
     property bool btn1On: false
     property bool btn2On: false
     property bool btn3On: false
@@ -103,6 +103,7 @@ Rectangle {
             anchors.bottomMargin: root.height * 0.037
             anchors.right: rightTempText.right
 
+            // Shows current airflow power
             CustomText {
                 id: airText
                 text: root.air.toString()
@@ -120,6 +121,7 @@ Rectangle {
             }
         }
 
+        // Shows passenger's current temperature setting
         CustomText {
             id: rightTempText
             text: root.temperature.toFixed(1)
@@ -130,7 +132,7 @@ Rectangle {
         }
 
 
-
+        // Controls for airflow (power)
         Column {
             id: airColumn
             anchors.verticalCenter: parent.verticalCenter
@@ -139,6 +141,7 @@ Rectangle {
             anchors.verticalCenterOffset: 0
             spacing: root.height * 0.014
 
+            // Increase power of airflow
             Rectangle {
                 id: rect2AirRight
                 width: root.rectWidth
@@ -163,6 +166,7 @@ Rectangle {
                 }
             }
 
+            // Decrease power of airflow
             Rectangle {
                 id: rect1AirRight
                 width: root.rectWidth
@@ -188,6 +192,7 @@ Rectangle {
             }
         }
 
+        // Temperature setting controls
         Row {
             id: rightTempRow
             anchors.right: airColumn.left
@@ -199,6 +204,7 @@ Rectangle {
                 id: rightTempColumn
                 spacing: root.height * 0.014
 
+                // Increase temperature
                 Rectangle {
                     id: rect2TempRight
                     width: root.rectWidth
@@ -222,6 +228,7 @@ Rectangle {
                     }
                 }
 
+                // Decrease temperature
                 Rectangle {
                     id: rect1TempRight
                     width: root.rectWidth
@@ -259,6 +266,7 @@ Rectangle {
             }
         }
 
+        // Airflow position setting for passenger
         Row {
             anchors.left: switchToDriver.right
             spacing: root.width * 0.026
@@ -266,6 +274,7 @@ Rectangle {
             anchors.topMargin: (root.height - rightTempText.y - rightTempText.height - tempMenuBar.height - height) * 0.7
             anchors.leftMargin: (root.width - 2 * root.rectWidth - 3 * root.width * 0.04 - root.rectWidth * 0.25 - width - switchToDriver.width) * 0.5
 
+            // Low
             Image {
                 id: fan1Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_left_icon.png")
@@ -278,6 +287,8 @@ Rectangle {
                     onClicked: root.handleAirPositionChange(1)
                 }
             }
+
+            // Low & mid
             Image {
                 id: fan2Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_low_mid_left_icon.png")
@@ -290,6 +301,8 @@ Rectangle {
                     onClicked: root.handleAirPositionChange(2)
                 }
             }
+
+            // Mid
             Image {
                 id: fan3Right
                 source: Qt.resolvedUrl("qrc:/resources/images/car_fan_mid_left_icon.png")
@@ -304,6 +317,7 @@ Rectangle {
             }
         }
 
+        // Button to switch to the driver screen
         Image {
             id: switchToDriver
             anchors.left: parent.left
@@ -352,8 +366,7 @@ Rectangle {
             property int lightHeight: root.height * 0.0093
             property double lightWidth: btnWidth - root.width * 0.015
             property int lightTopMargin: root.width * 0.005
-            property string lightColorOn: "#e6a340" //on?
-            //property string lightColor: "#b2c4d9"
+            property string lightColorOn: "#e6a340" //on
             property string lightColorOff: "#5c646b" //off
             property int buttonHeight: root.height * 0.12
             property int imageSize: root.height * 0.09
