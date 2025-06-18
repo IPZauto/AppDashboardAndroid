@@ -61,9 +61,11 @@ qt_add_resources(appAppDashboardAndroid "resources"
 	resources/images/steering_wheel_heat_icon.png
         resources/images/windshield_defrost_front_icon.png
         resources/images/windshield_defrost_rear_icon.png
-        resources/sounds/Harry_Styles_-_Daylight.mp3
-        resources/sounds/Harry_Styles_-_Satellite.mp3
+        resources/sounds/Ed_Sheeran_-_Galway_Girl.mp3
+        resources/sounds/Ed_Sheeran_-_Castle_On_The_Hill.mp3
         resources/sounds/Hozier_-_Too_Sweet.mp3
+        resources/sounds/One_Republic_-_Counting_Stars.mp3
+        resources/sounds/Passenger_-_Let_Her_Go.mp3
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.

@@ -34,9 +34,11 @@ Rectangle {
     // Name of the song contains "_" symbol where "space" is needed because of config files specification
     ListModel {
         id: playlistModel
-        ListElement {url: "qrc:/resources/sounds/Harry_Styles_-_Daylight.mp3"}
-        ListElement {url: "qrc:/resources/sounds/Harry_Styles_-_Satellite.mp3"}
+        ListElement {url: "qrc:/resources/sounds/Ed_Sheeran_-_Castle_On_The_Hill.mp3"}
+        ListElement {url: "qrc:/resources/sounds/Ed_Sheeran_-_Galway_Girl.mp3"}
         ListElement {url: "qrc:/resources/sounds/Hozier_-_Too_Sweet.mp3"}
+        ListElement {url: "qrc:/resources/sounds/One_Republic_-_Counting_Stars.mp3"}
+        ListElement {url: "qrc:/resources/sounds/Passenger_-_Let_Her_Go.mp3"}
     }
 
     // Function that plays current song defined by currentSongId

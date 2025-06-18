@@ -21,8 +21,10 @@
 	<file>resources/images/steering_wheel_heat_icon.png</file>
         <file>resources/images/windshield_defrost_front_icon.png</file>
         <file>resources/images/windshield_defrost_rear_icon.png</file>
-        <file>resources/sounds/Harry_Styles_-_Daylight.mp3</file>
-        <file>resources/sounds/Harry_Styles_-_Satellite.mp3</file>
+        <file>resources/sounds/Ed_Sheeran_-_Galway_Girl.mp3</file>
+        <file>resources/sounds/Ed_Sheeran_-_Castle_On_The_Hill.mp3</file>
         <file>resources/sounds/Hozier_-_Too_Sweet.mp3</file>
+	<file>resources/sounds/One_Republic_-_Counting_Stars.mp3</file>
+	<file>resources/sounds/Passenger_-_Let_Her_Go.mp3</file>
     </qresource>
 </RCC>
